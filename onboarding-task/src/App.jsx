@@ -1,8 +1,8 @@
+import React, { PureComponent } from 'react';
 import './sticky-footer.css';
-import React, { Component } from 'react';
-import List from './components/List';
+import { List } from './components/List';
 
-class App extends Component {
+class App extends PureComponent {
   render() {
     return (
       <div>
@@ -34,4 +34,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export { App };

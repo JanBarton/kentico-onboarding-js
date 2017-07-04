@@ -1,5 +1,9 @@
 {
+  "extends": [
+    "react-set-state-usage"
+  ],
   "rules": {
+    "react-set-state-usage": true,
     "align": [
       true,
       "parameters",
