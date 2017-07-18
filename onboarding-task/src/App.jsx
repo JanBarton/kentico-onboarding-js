@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+
 import './sticky-footer.css';
 import { List } from './components/List';
 

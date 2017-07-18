@@ -47,7 +47,7 @@
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
     "tslint": "^4.3.1",
-    "ts-jest": "^19.0.0"
+    "ts-jest": "^19.0.0",
     "typescript": "^2.1.5",
     "url-loader": "0.5.7",
     "webpack": "1.14.0",
@@ -58,14 +58,16 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "immutable": "^3.8.1",
+    "memoizee": "^0.4.5",
     "prop-types": "^15.4.2",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react-dom": "^15.4.2"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom --no-cache"
+    "test": "node scripts/test.js --env=jsdom --no-cache",
+    "tslint": "tslint \"./src/**/*.ts?(x)\""
   },
   "jest": {
     "collectCoverageFrom": [
