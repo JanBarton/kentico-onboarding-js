@@ -1,25 +1,42 @@
 import { NodeContent } from '../../src/models/NodeContent';
 import { NodeInfo } from '../../src/models/NodeInfo';
-import { createMemoizedNodeViewModel, createNodeViewModel } from '../../src/models/NodeViewModel';
+import {
+  createMemoizedNodeViewModel,
+  NodeViewModel,
+} from '../../src/models/NodeViewModel';
 import { generateId } from '../../src/utils/generateId';
 
 describe('NodeViewModel', () => {
-  const node = new NodeContent({
-    id: generateId(),
-    text: 'test text',
-  });
-  const nodeInfo = new NodeInfo();
-
   describe('createMemoizedNodeViewModel', () => {
     it('is really memoized', () => {
-      const memoizedNodeViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
-      expect(memoizedNodeViewModel).toBe(createMemoizedNodeViewModel(node, nodeInfo, 0));
+      const node = new NodeContent({
+        id: generateId(),
+        text: 'test text',
+      });
+      const nodeInfo = new NodeInfo();
+      const createdNodeViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
+
+      const theSameNodeViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
+
+      expect(createdNodeViewModel).toBe(theSameNodeViewModel);
     });
-  });
-  describe('createNodeViewModel', () => {
-    it('creates a new instance of the model every time when called', () => {
-      const nodeViewModel = createNodeViewModel(node, nodeInfo, 0);
-      expect(nodeViewModel).not.toBe(createNodeViewModel(node, nodeInfo, 0));
+
+    it('creates a correct viewModel', () => {
+      const node = new NodeContent({
+        id: generateId(),
+        text: 'test text',
+      });
+      const nodeInfo = new NodeInfo({ isBeingEdited: true });
+      const expectedViewModel = new NodeViewModel({
+        id: node.id,
+        text: 'test text',
+        isBeingEdited: true,
+        index: 1,
+      });
+
+      const actualViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
+
+      expect(expectedViewModel).toEqual(actualViewModel);
     });
   });
 });

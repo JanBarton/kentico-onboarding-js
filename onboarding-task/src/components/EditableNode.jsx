@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { isNullOrWhitespace } from '../utils/validation';
 
@@ -7,27 +8,26 @@ class EditableNode extends PureComponent {
   static displayName = 'EditableNode';
 
   static propTypes = {
-    nodeModel: PropTypes.shape({
-      text: PropTypes.string.isRequired,
-      index: PropTypes.number.isRequired,
-    }).isRequired,
     onSave: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    nodeViewModel: ImmutablePropTypes.recordOf({
+      text: PropTypes.string.isRequired,
+      index: PropTypes.number.isRequired,
+    }).isRequired,
   };
 
   constructor(props) {
     super(props);
+
     this.state = {
-      text: this.props.nodeModel.text,
+      text: this.props.nodeViewModel.text,
     };
   }
 
-  _save = event => {
+  _saveNode = event => {
     event.preventDefault();
-    if (!isNullOrWhitespace(this.state.text)) {
-      this.props.onSave(this.state.text);
-    }
+    this.props.onSave(this.state.text);
   };
 
   _updateText = event => {
@@ -36,22 +36,23 @@ class EditableNode extends PureComponent {
   };
 
   render() {
+    const { text } = this.state;
+
     return (
-      <form className="form-inline" onSubmit={this._save}>
-        {this.props.nodeModel.index}.
+      <form className="form-inline" onSubmit={this._saveNode}>
+        {this.props.nodeViewModel.index}.
 
         <input
           autoFocus
           className="form-control"
-          value={this.state.text}
+          value={text}
           onChange={this._updateText}
         />
 
         <button
           type="submit"
-          ref="saveButton"
           className="btn btn-primary"
-          disabled={isNullOrWhitespace(this.state.text)}
+          disabled={isNullOrWhitespace(text)}
         >
           Save
         </button>

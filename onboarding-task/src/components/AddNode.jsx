@@ -17,7 +17,8 @@ class AddNode extends PureComponent {
     };
   }
 
-  _clickAdd = () => {
+  _onAdd = event => {
+    event.preventDefault();
     this.props.onAdd(this.state.text);
     this.setState(() => ({ text: '' }));
   };
@@ -29,9 +30,10 @@ class AddNode extends PureComponent {
 
   render() {
     return (
-      <form className="form-inline" >
+      <form className="form-inline" onSubmit={this._onAdd}>
 
         <input
+          autoFocus
           className="form-control"
           value={this.state.text}
           onChange={this._updateText}
@@ -39,11 +41,11 @@ class AddNode extends PureComponent {
 
         <button
           autoFocus
+          type="submit"
           className="btn btn-default"
-          onClick={this._clickAdd}
-          onSubmit={this._clickAdd}
           disabled={isNullOrWhitespace(this.state.text)}
-        >Add
+        >
+          Add
         </button>
 
       </form>
