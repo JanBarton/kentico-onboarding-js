@@ -1,9 +1,9 @@
 import { OrderedMap } from 'immutable';
 
-import * as actions from '../../../src/actions/actionCreators';
-import { NodeInfo } from '../../../src/models/NodeInfo';
-import { nodesInfoReducer } from '../../../src/reducers/listReducers/nodesInfoReducer';
-import { addNodeFactory } from '../../../src/actions/addNodeFactory';
+import * as actions from '../../../src/actions/actionCreators.ts';
+import { NodeInfo } from '../../../src/models/NodeInfo.ts';
+import { nodesInfoReducer } from '../../../src/reducers/listReducers/nodesInfoReducer.ts';
+import { addNodeFactory } from '../../../src/actions/addNodeFactory.ts';
 
 describe('nodesInfoReducer', () => {
   const emptyState = OrderedMap();

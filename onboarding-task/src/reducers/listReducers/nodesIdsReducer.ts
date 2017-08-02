@@ -4,8 +4,11 @@ import {
   ADD_NODE,
   DELETE_NODE,
 } from '../../actions/actionTypes';
+import { IAction } from '../../actions/IAction';
 
-export const nodesIdsReducer = (state = List(), action) => {
+export type INodesIds = List<IdType>;
+
+export const nodesIdsReducer = (state: INodesIds = List<IdType>(), action: IAction): INodesIds => {
   switch (action.type) {
     case ADD_NODE:
       return state.push(action.payload.id);
@@ -14,6 +17,7 @@ export const nodesIdsReducer = (state = List(), action) => {
       if (index === -1) {
         return state;
       }
+
       return state.delete(index);
     }
     default:

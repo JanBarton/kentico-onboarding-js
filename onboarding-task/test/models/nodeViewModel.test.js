@@ -1,10 +1,10 @@
-import { NodeContent } from '../../src/models/NodeContent';
-import { NodeInfo } from '../../src/models/NodeInfo';
+import { NodeContent } from '../../src/models/NodeContent.ts';
+import { NodeInfo } from '../../src/models/NodeInfo.ts';
 import {
   createMemoizedNodeViewModel,
   NodeViewModel,
-} from '../../src/models/NodeViewModel';
-import { generateId } from '../../src/utils/generateId';
+} from '../../src/models/NodeViewModel.ts';
+import { generateId } from '../../src/utils/generateId.ts';
 
 describe('NodeViewModel', () => {
   describe('createMemoizedNodeViewModel', () => {

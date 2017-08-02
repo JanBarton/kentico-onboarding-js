@@ -1,8 +1,8 @@
 import { List } from 'immutable';
 
-import * as actions from '../../../src/actions/actionCreators';
-import { nodesIdsReducer } from '../../../src/reducers/listReducers/nodesIdsReducer';
-import { addNodeFactory } from '../../../src/actions/addNodeFactory';
+import * as actions from '../../../src/actions/actionCreators.ts';
+import { nodesIdsReducer } from '../../../src/reducers/listReducers/nodesIdsReducer.ts';
+import { addNodeFactory } from '../../../src/actions/addNodeFactory.ts';
 
 describe('nodesIdsReducer', () => {
   const emptyState = List();

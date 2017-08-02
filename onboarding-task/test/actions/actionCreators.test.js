@@ -1,6 +1,6 @@
-import * as actions from '../../src/actions/actionCreators';
-import * as types from '../../src/actions/actionTypes';
-import { addNodeFactory } from '../../src/actions/addNodeFactory';
+import * as actions from '../../src/actions/actionCreators.ts';
+import * as types from '../../src/actions/actionTypes.ts';
+import { addNodeFactory } from '../../src/actions/addNodeFactory.ts';
 
 const generateNewId = jest.fn(() => '80149842-a624-b66b-5d3c-37c24523ba46');
 const addNode = addNodeFactory(generateNewId);
