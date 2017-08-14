@@ -1,11 +1,27 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import * as classNames from 'classnames';
+import { FormEvent } from 'react';
+import { KeyboardEvent } from 'react';
 
 import { isItemTextValid } from '../utils/validation';
+import { IViewItem } from '../models/ViewItem';
 
-class EditItem extends PureComponent {
+export interface IEditItemDataProps {
+  item: IViewItem;
+}
 
+export interface IEditItemCallbackProps {
+  onDelete: () => void;
+  onSave: (text: string) => void;
+  onCancel: () => void;
+}
+
+interface IEditItemState {
+  text: string;
+}
+
+class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbackProps, IEditItemState> {
   static displayName = 'EditItem';
 
   static propTypes = {
@@ -20,7 +36,7 @@ class EditItem extends PureComponent {
     onCancel: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
+  constructor(props: IEditItemDataProps & IEditItemCallbackProps) {
     super(props);
 
     this.state = {
@@ -28,9 +44,9 @@ class EditItem extends PureComponent {
     };
   }
 
-  _textChange = (event) => {
-    const setStateText = (text) => (() => ({ text }));
-    this.setState(setStateText(event.target.value));
+  _textChange = (event: FormEvent<HTMLInputElement>) => {
+    const setStateText = (text: string) => (() => ({text}));
+    this.setState(setStateText(event.currentTarget.value));
   };
 
   _saveChange = () => {
@@ -41,14 +57,16 @@ class EditItem extends PureComponent {
     }
   };
 
-  _keyUp = (event) => {
+  _keyUp = (event: KeyboardEvent<HTMLInputElement>) => {
     switch (event.key) {
       case 'Enter':
         this._saveChange();
         break;
+
       case 'Escape':
         this.props.onCancel();
         break;
+
       default:
         break;
     }
@@ -69,7 +87,7 @@ class EditItem extends PureComponent {
           onKeyUp={this._keyUp}
         />
         <button
-          className={classNames('btn', 'btn-primary', 'form-control', { disabled: !isItemTextValid(editedText) })}
+          className={classNames('btn', 'btn-primary', 'form-control', {disabled: !isItemTextValid(editedText)})}
           onClick={this._saveChange}
         >
           Save

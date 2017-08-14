@@ -1,10 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 
-import { ViewItem } from '../components/ViewItem';
-import { EditItem } from '../components/EditItem';
+import { ViewItem } from './ViewItem';
+import { EditItem } from './EditItem';
+import { IViewItem } from '../models/ViewItem';
 
-const ListItem = (props) => {
+export interface IListItemDataProps {
+  item: IViewItem;
+}
+
+export interface IListItemCallbackProps {
+  onClick: () => void;
+  onDelete: () => void;
+  onSave: (text: string) => void;
+  onCancel: () => void;
+}
+
+const ListItem: React.StatelessComponent<IListItemDataProps & IListItemCallbackProps> = (props) => {
   if (props.item.isBeingEdited) {
     return (
       <EditItem

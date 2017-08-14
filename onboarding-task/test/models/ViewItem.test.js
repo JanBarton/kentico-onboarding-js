@@ -1,6 +1,6 @@
-import { ViewItem } from '../../src/models/ViewItem';
-import { ItemData } from '../../src/models/ItemData';
-import { ItemFlags } from '../../src/models/ItemFlags';
+import { ViewItem } from '../../src/models/ViewItem.ts';
+import { ItemData } from '../../src/models/ItemData.ts';
+import { ItemFlags } from '../../src/models/ItemFlags.ts';
 
 describe('View item memoization tests', () => {
   const testItemData = new ItemData({ id: '0', text: 'Mlock' });

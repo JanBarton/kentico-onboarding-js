@@ -10,7 +10,7 @@ import { Provider } from 'react-redux';
 import App from './App.jsx';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
-import { rootReducer } from './reducers/rootReducer';
+import { rootReducer } from './reducers/rootReducer.ts';
 
 const store = createStore(rootReducer, applyMiddleware(logger));
 

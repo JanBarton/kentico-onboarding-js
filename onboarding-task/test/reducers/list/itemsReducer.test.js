@@ -1,18 +1,18 @@
 import { OrderedMap } from 'immutable';
 
-import { itemFlagsMapReducer } from '../../../src/reducers/list/itemFlagsMapReducer';
-import { itemsReducer } from '../../../src/reducers/list/itemsReducer';
-import { ItemData } from '../../../src/models/ItemData';
+import { itemFlagsMapReducer } from '../../../src/reducers/list/itemFlagsMapReducer.ts';
+import { itemsReducer } from '../../../src/reducers/list/itemsReducer.ts';
+import { ItemData } from '../../../src/models/ItemData.ts';
 import {
   ITEM_CHANGE_SAVED,
   ITEM_CREATED,
   ITEM_DELETED,
-} from '../../../src/actions/actionTypes';
+} from '../../../src/actions/actionTypes.ts';
 import {
   createItemFactory,
   deleteItem,
   saveChange,
-} from '../../../src/actions/actionCreators';
+} from '../../../src/actions/actionCreators.ts';
 
 describe('Items map reducer with', () => {
   const testItemsMapState = new OrderedMap([

@@ -1,10 +1,19 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
+import * as classNames from 'classnames';
 
 import { isItemTextValid } from '../utils/validation';
+import { FormEvent } from 'react';
 
-class AddItem extends PureComponent {
+export interface IAddItemCallbackProps {
+  onAddItem: (text: string) => void;
+}
+
+interface IAddItemState {
+  currentText: string;
+}
+
+class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> {
 
   static displayName = 'AddItem';
 
@@ -12,19 +21,19 @@ class AddItem extends PureComponent {
     onAddItem: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
+  constructor(props: IAddItemCallbackProps) {
     super(props);
     this.state = {
       currentText: '',
     };
   }
 
-  _onChange = (event) => {
-    const setStateText = (currentText) => (() => ({ currentText }));
-    this.setState(setStateText(event.target.value));
+  _onChange = (event: FormEvent<HTMLInputElement>): void => {
+    const setStateText = (currentText: string) => (() => ({ currentText }));
+    this.setState(setStateText(event.currentTarget.value));
   };
 
-  _addItem = (event) => {
+  _addItem = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const currText = this.state.currentText;
 

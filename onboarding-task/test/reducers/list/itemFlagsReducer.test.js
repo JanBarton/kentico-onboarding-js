@@ -1,15 +1,15 @@
-import { itemFlagsReducer } from '../../../src/reducers/list/itemFlagsReducer';
-import { ItemFlags } from '../../../src/models/ItemFlags';
+import { itemFlagsReducer } from '../../../src/reducers/list/itemFlagsReducer.ts';
+import { ItemFlags } from '../../../src/models/ItemFlags.ts';
 import {
   ITEM_CHANGE_CANCELLED,
   ITEM_CHANGE_SAVED,
   ITEM_MAKE_EDITABLE,
-} from '../../../src/actions/actionTypes';
+} from '../../../src/actions/actionTypes.ts';
 import {
   cancelChange,
   makeEditable,
   saveChange,
-} from '../../../src/actions/actionCreators';
+} from '../../../src/actions/actionCreators.ts';
 
 describe('ItemFlags reducer with', () => {
   describe(`"${ITEM_MAKE_EDITABLE}" action`, () => {

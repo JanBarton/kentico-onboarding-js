@@ -4,14 +4,14 @@ import {
   ITEM_CREATED,
   ITEM_DELETED,
   ITEM_MAKE_EDITABLE,
-} from '../../src/actions/actionTypes';
+} from '../../src/actions/actionTypes.ts';
 import {
   cancelChange,
   createItemFactory,
   deleteItem,
   makeEditable,
   saveChange,
-} from '../../src/actions/actionCreators';
+} from '../../src/actions/actionCreators.ts';
 
 describe('Action creators', () => {
   const mockId = '123';

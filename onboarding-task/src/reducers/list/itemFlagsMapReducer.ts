@@ -1,7 +1,8 @@
 import { OrderedMap } from 'immutable';
 
-import { itemFlagsReducer } from './itemFlagsReducer';
 import { ItemFlags } from '../../models/ItemFlags';
+import { IAction } from '../../interfaces/IAction';
+import { itemFlagsReducer } from './itemFlagsReducer';
 import {
   ITEM_CHANGE_CANCELLED,
   ITEM_CHANGE_SAVED,
@@ -10,9 +11,11 @@ import {
   ITEM_MAKE_EDITABLE,
 } from '../../actions/actionTypes';
 
-const defaultState = new OrderedMap();
+export type ItemsFlagsMap = OrderedMap<string, ItemFlags>;
 
-export const itemFlagsMapReducer = (state = defaultState, action) => {
+const defaultState = OrderedMap<string, ItemFlags>();
+
+export const itemFlagsMapReducer = (state: ItemsFlagsMap = defaultState, action: IAction): ItemsFlagsMap => {
   switch (action.type) {
     case ITEM_DELETED:
       return state.remove(action.payload.id);

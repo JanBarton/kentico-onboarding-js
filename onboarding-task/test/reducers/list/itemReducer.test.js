@@ -1,7 +1,7 @@
-import { itemReducer } from '../../../src/reducers/list/itemReducer';
-import { ItemData } from '../../../src/models/ItemData';
-import { ITEM_CHANGE_SAVED } from '../../../src/actions/actionTypes';
-import { saveChange } from '../../../src/actions/actionCreators';
+import { itemReducer } from '../../../src/reducers/list/itemReducer.ts';
+import { ItemData } from '../../../src/models/ItemData.ts';
+import { ITEM_CHANGE_SAVED } from '../../../src/actions/actionTypes.ts';
+import { saveChange } from '../../../src/actions/actionCreators.ts';
 
 describe('Item reducer', () => {
   describe(`"${ITEM_CHANGE_SAVED}" action`, () => {

@@ -1,21 +1,21 @@
 import { OrderedMap } from 'immutable';
 
-import { itemFlagsMapReducer } from '../../../src/reducers/list/itemFlagsMapReducer';
-import { ItemFlags } from '../../../src/models/ItemFlags';
+import { itemFlagsMapReducer } from '../../../src/reducers/list/itemFlagsMapReducer.ts';
+import { ItemFlags } from '../../../src/models/ItemFlags.ts';
 import {
   ITEM_CHANGE_CANCELLED,
   ITEM_CHANGE_SAVED,
   ITEM_CREATED,
   ITEM_DELETED,
   ITEM_MAKE_EDITABLE,
-} from '../../../src/actions/actionTypes';
+} from '../../../src/actions/actionTypes.ts';
 import {
   cancelChange,
   createItemFactory,
   deleteItem,
   makeEditable,
   saveChange,
-} from '../../../src/actions/actionCreators';
+} from '../../../src/actions/actionCreators.ts';
 
 describe('ItemFlags map reducer with', () => {
   const testFlagsMapState = new OrderedMap([
