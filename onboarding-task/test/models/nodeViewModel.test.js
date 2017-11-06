@@ -1,5 +1,4 @@
 import { NodeContent } from '../../src/models/NodeContent.ts';
-import { NodeInfo } from '../../src/models/NodeInfo.ts';
 import {
   createMemoizedNodeViewModel,
   NodeViewModel,
@@ -13,10 +12,9 @@ describe('NodeViewModel', () => {
         id: generateId(),
         text: 'test text',
       });
-      const nodeInfo = new NodeInfo();
-      const createdNodeViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
+      const createdNodeViewModel = createMemoizedNodeViewModel(node, false, false, 0);
 
-      const theSameNodeViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
+      const theSameNodeViewModel = createMemoizedNodeViewModel(node, false, false, 0);
 
       expect(createdNodeViewModel).toBe(theSameNodeViewModel);
     });
@@ -26,15 +24,15 @@ describe('NodeViewModel', () => {
         id: generateId(),
         text: 'test text',
       });
-      const nodeInfo = new NodeInfo({ isBeingEdited: true });
       const expectedViewModel = new NodeViewModel({
         id: node.id,
         text: 'test text',
         isBeingEdited: true,
+        isPersisted: true,
         index: 1,
       });
 
-      const actualViewModel = createMemoizedNodeViewModel(node, nodeInfo, 0);
+      const actualViewModel = createMemoizedNodeViewModel(node, true, true, 0);
 
       expect(expectedViewModel).toEqual(actualViewModel);
     });

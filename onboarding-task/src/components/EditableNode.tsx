@@ -3,7 +3,6 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { HotKeys } from 'react-hotkeys';
 
-import { KeyHandler } from '../@types/IKeyMap';
 import { isNullOrWhitespace } from '../utils/validation';
 import { INodeViewModel } from '../models/NodeViewModel';
 
@@ -21,20 +20,20 @@ type IEditableNodeProps = IEditableNodeDataProps & IEditableNodeCallbacksProps;
 
 interface IEditableNodeState {
   text: string;
-  keyHandlers: KeyHandler;
+  isValid: boolean;
 }
 
 export class EditableNode extends React.PureComponent<IEditableNodeProps, IEditableNodeState> {
   static displayName = 'EditableNode';
 
   static propTypes: React.ValidationMap<IEditableNodeProps> = {
-    onSave: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
     nodeViewModel: ImmutablePropTypes.recordOf({
       text: PropTypes.string.isRequired,
       index: PropTypes.number.isRequired,
     }).isRequired,
+    onSave: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
   };
 
   constructor(props: IEditableNodeProps) {
@@ -42,31 +41,37 @@ export class EditableNode extends React.PureComponent<IEditableNodeProps, IEdita
 
     this.state = {
       text: props.nodeViewModel.text,
-      keyHandlers: {
-        cancelNode: this.props.onCancel,
-        saveNode: this._saveNode,
-      }
+      isValid: false,
     };
   }
 
-  _saveNode = (): void => {
-    if (!isNullOrWhitespace(this.state.text)) {
+  _saveNode = (event: React.KeyboardEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (!this.state.isValid) {
       this.props.onSave(this.state.text);
     }
   };
 
   _updateText = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const text = event.target.value;
-    this.setState(() => ({text}));
+    this.setState(() => ({
+      text,
+      isValid: isNullOrWhitespace(text)
+    }));
   };
 
   render() {
     const {text} = this.state;
+    const { nodeViewModel, onCancel, onDelete } = this.props;
 
     return (
-      <HotKeys handlers={this.state.keyHandlers}>
+      <HotKeys handlers={{
+        cancelNode: onCancel,
+        saveNode: this._saveNode,
+        deleteNode: onDelete,
+      }}>
         <form className="form-inline" onSubmit={this._saveNode}>
-          {this.props.nodeViewModel.index}.
+          {nodeViewModel.index}.
 
           <input
             autoFocus
@@ -78,7 +83,7 @@ export class EditableNode extends React.PureComponent<IEditableNodeProps, IEdita
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={isNullOrWhitespace(text)}
+            disabled={this.state.isValid}
           >
             Save
           </button>
@@ -86,7 +91,7 @@ export class EditableNode extends React.PureComponent<IEditableNodeProps, IEdita
           <button
             type="button"
             className="btn btn-default"
-            onClick={this.props.onCancel}
+            onClick={onCancel}
           >
             Cancel
           </button>
@@ -94,7 +99,7 @@ export class EditableNode extends React.PureComponent<IEditableNodeProps, IEdita
           <button
             type="button"
             className="btn btn-danger"
-            onClick={this.props.onDelete}
+            onClick={onDelete}
           >
             Delete
           </button>

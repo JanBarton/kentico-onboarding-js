@@ -44,7 +44,7 @@ module.exports = {
     // We ship a few polyfills by default:
     require.resolve('./polyfills'),
     // Finally, this is your app's code:
-    paths.appIndexJs
+    paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
@@ -59,7 +59,7 @@ module.exports = {
     // containing code from all our entry points, and the Webpack runtime.
     filename: 'static/js/bundle.js',
     // This is the URL that app is served from. We use "/" in development.
-    publicPath: publicPath
+    publicPath: publicPath,
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -76,8 +76,8 @@ module.exports = {
     alias: {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-      'react-native': 'react-native-web'
-    }
+      'react-native': 'react-native-web',
+    },
   },
 
   module: {
@@ -88,7 +88,7 @@ module.exports = {
         test: /\.(js|jsx)$/, // TODO ts|tsx?
         loader: 'eslint',
         include: paths.appSrc,
-      }
+      },
     ],
     loaders: [
       // Default loader: load all assets that are not handled
@@ -112,13 +112,13 @@ module.exports = {
           /\.(js|jsx)$/,
           /\.css$/,
           /\.json$/,
-          /\.svg$/
+          /\.svg$/,
         ],
         loader: 'url',
         query: {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]'
-        }
+        },
       },
       // Process JS with Babel.
       {
@@ -131,11 +131,11 @@ module.exports = {
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
           cacheDirectory: true
-        }
+        },
       },
       {
         test: /\.(ts|tsx)$/,
-        loader: "awesome-typescript-loader"
+        loader: "awesome-typescript-loader",
       },
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -150,7 +150,7 @@ module.exports = {
       // allow it implicitly so we also enable it.
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json',
       },
       // "file" loader for svg
       {
@@ -158,9 +158,9 @@ module.exports = {
         loader: 'file',
         query: {
           name: 'static/media/[name].[hash:8].[ext]'
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
 
   // We use PostCSS for autoprefixing only.

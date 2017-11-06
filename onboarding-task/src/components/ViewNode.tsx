@@ -19,6 +19,7 @@ const viewNodePropTypes: React.ValidationMap<IViewNodeProps> = {
     id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
+    isPersisted: PropTypes.bool.isRequired,
   }).isRequired,
   onEdit: PropTypes.func.isRequired,
 };
@@ -28,4 +29,3 @@ export const ViewNode: React.StatelessComponent<IViewNodeProps> = ({onEdit, node
 
 ViewNode.displayName = 'ViewNode';
 ViewNode.propTypes = viewNodePropTypes;
-

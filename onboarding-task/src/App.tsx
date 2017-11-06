@@ -9,7 +9,10 @@ class App extends React.PureComponent<undefined, undefined> {
       <div>
         <div className="container">
           <div className="header clearfix">
-            <h3 className="text-muted">Kentico Academy</h3>
+            <h3 className="text-muted">
+              Kentico Academy
+              <span className="glyphicon glyphicon-knight" aria-hidden={true}/>
+            </h3>
           </div>
 
           <div className="jumbotron">

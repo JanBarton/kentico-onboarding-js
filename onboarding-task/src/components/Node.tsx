@@ -23,6 +23,7 @@ const nodePropTypes: React.ValidationMap<INodeProps> = {
   nodeViewModel: ImmutablePropTypes.recordOf({
     id: PropTypes.string.isRequired,
     isBeingEdited: PropTypes.bool.isRequired,
+    isPersisted: PropTypes.bool.isRequired,
     text: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
   }).isRequired,
@@ -46,7 +47,6 @@ export const Node: React.StatelessComponent<INodeProps> = props =>
       onEdit={props.onEdit}
     />
   );
-
 
 Node.displayName = 'Node';
 Node.propTypes = nodePropTypes;

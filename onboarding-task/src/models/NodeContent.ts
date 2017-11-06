@@ -1,7 +1,7 @@
 import { TypedRecord } from './TypedRecord';
 
-interface INodeContent {
-  readonly id: IdType;
+export interface INodeContent {
+  readonly id: Guid;
   readonly text: string;
 }
 
@@ -11,7 +11,7 @@ const defaultNodeContent: INodeContent = {
 };
 
 class NodeContent extends TypedRecord<NodeContent, INodeContent>(defaultNodeContent) implements INodeContent {
-  readonly id: IdType;
+  readonly id: Guid;
   readonly text: string;
 }
 

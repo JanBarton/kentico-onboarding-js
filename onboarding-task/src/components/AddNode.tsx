@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types';
 
 import { isNullOrWhitespace } from '../utils/validation';
 import { HotKeys } from 'react-hotkeys';
-import { KeyHandler } from '../@types/IKeyMap';
 
 export interface IAddNodeCallbacksProps {
   onAdd: (text: string) => void;
@@ -11,7 +10,7 @@ export interface IAddNodeCallbacksProps {
 
 interface IAddNodeState {
   text: string;
-  keyHandlers: KeyHandler;
+  isValid: boolean;
 }
 
 export class AddNode extends React.PureComponent<IAddNodeCallbacksProps, IAddNodeState> {
@@ -25,14 +24,12 @@ export class AddNode extends React.PureComponent<IAddNodeCallbacksProps, IAddNod
     super(props);
     this.state = {
       text: '',
-      keyHandlers: {
-        saveNode: this._onAdd,
-      }
+      isValid: true,
     };
   }
 
   _onAdd = (event: React.KeyboardEvent<HTMLFormElement>): void => {
-    if (!isNullOrWhitespace(this.state.text)) {
+    if (!this.state.isValid) {
       event.preventDefault();
       this.props.onAdd(this.state.text);
       this.setState(() => ({text: ''}));
@@ -41,12 +38,15 @@ export class AddNode extends React.PureComponent<IAddNodeCallbacksProps, IAddNod
 
   _updateText = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const text = event.target.value;
-    this.setState(() => ({text}));
+    this.setState(() => ({
+      text,
+      isValid: isNullOrWhitespace(text)
+    }));
   };
 
   render() {
     return (
-      <HotKeys handlers={this.state.keyHandlers}>
+      <HotKeys handlers={{saveNode: this._onAdd}}>
         <form className="form-inline" onSubmit={this._onAdd}>
 
           <input
@@ -60,7 +60,7 @@ export class AddNode extends React.PureComponent<IAddNodeCallbacksProps, IAddNod
             autoFocus
             type="submit"
             className="btn btn-default"
-            disabled={isNullOrWhitespace(this.state.text)}
+            disabled={this.state.isValid}
           >
             Add
           </button>
