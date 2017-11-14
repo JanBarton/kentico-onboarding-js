@@ -1,3 +1,5 @@
+import { Promise } from 'es6-promise';
+
 import { addNodeFactory } from '../../src/actions/internalActionCreators/addNodeFactory';
 
 describe('addNodeFactory', () => {

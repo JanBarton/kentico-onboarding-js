@@ -1,3 +1,5 @@
+import { Promise } from 'es6-promise';
+
 import { deleteNodeFactory } from '../../src/actions/internalActionCreators/deleteNodeFactory';
 
 describe('deleteNodeFactory', () => {

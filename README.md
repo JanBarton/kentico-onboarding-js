@@ -1,4 +1,8 @@
-# kentico-onboarding-js
+**Master** branch: [![Build Status](https://travis-ci.org/Neytus/kentico-onboarding-js.svg?branch=master)](https://travis-ci.org/Neytus/kentico-onboarding-js)
+
+**Develop** branch: [![Build Status](https://travis-ci.org/Neytus/kentico-onboarding-js.svg?branch=develop)](https://travis-ci.org/Neytus/kentico-onboarding-js)
+
+# kentico-onboarding-js 
 Simple step-by-step task for Kentico Academy to learn the basics of JS, React, Redux.
 
 This project will consist of two tasks. In first one we will implement simple list of editable items using ReactJS only. In the second part we will try to refactor our code to use ImmutableJS and ReduxJS. 

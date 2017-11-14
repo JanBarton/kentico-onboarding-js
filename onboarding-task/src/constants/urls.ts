@@ -1,1 +1,1 @@
-export const API_URL = 'api/v1/nodes';
+export const API_URL = 'http://todolistapi20171108014456.azurewebsites.net/api/v1/nodes';

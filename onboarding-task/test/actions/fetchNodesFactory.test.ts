@@ -1,3 +1,5 @@
+import { Promise } from 'es6-promise';
+
 import { getNodesFactory } from '../../src/actions/internalActionCreators/getNodesFactory';
 
 describe('getNodesFactory', () => {
