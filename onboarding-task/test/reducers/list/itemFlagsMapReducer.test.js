@@ -2,19 +2,29 @@ import { OrderedMap } from 'immutable';
 
 import { itemFlagsMapReducer } from '../../../src/reducers/list/itemFlagsMapReducer.ts';
 import { ItemFlags } from '../../../src/models/ItemFlags.ts';
+import { ItemData } from '../../../src/models/ItemData.ts';
 import {
+  DELETE_REQUEST_FAIL,
+  DELETE_REQUEST_STARTED,
+  DELETE_REQUEST_SUCCESS,
   ITEM_CHANGE_CANCELLED,
-  ITEM_CHANGE_SAVED,
-  ITEM_CREATED,
-  ITEM_DELETED,
   ITEM_MAKE_EDITABLE,
+  CREATE_REQUEST_FAIL,
+  CREATE_REQUEST_STARTED,
+  CREATE_REQUEST_SUCCESS,
+  UPDATE_REQUEST_FAIL,
+  UPDATE_REQUEST_STARTED,
+  UPDATE_REQUEST_SUCCESS,
 } from '../../../src/actions/actionTypes.ts';
 import {
-  cancelChange,
-  createItemFactory,
-  deleteItem,
+  createItemSucceeded,
+  createItemStarted,
+  deleteItemSucceeded,
   makeEditable,
-  saveChange,
+  cancelChange,
+  deleteItemStarted,
+  updateItemStarted,
+  updateItemSucceeded,
 } from '../../../src/actions/actionCreators.ts';
 
 describe('ItemFlags map reducer with', () => {
@@ -31,23 +41,10 @@ describe('ItemFlags map reducer with', () => {
     ],
   ]);
   const mockId = '123';
-  const mockIdGenerator = () => mockId;
 
-  describe(`"${ITEM_CREATED}" action`, () => {
-    it('adds ItemFlags to map', () => {
-      const prevState = testFlagsMapState;
-      const expectedState = new OrderedMap([...prevState, [mockId, new ItemFlags()]]);
-      const action = createItemFactory(mockIdGenerator)('Mlock');
-
-      const createdState = itemFlagsMapReducer(prevState, action);
-
-      expect(createdState).toEqual(expectedState);
-    });
-  });
-
-  describe(`"${ITEM_DELETED}" action`, () => {
+  describe(`"${DELETE_REQUEST_SUCCESS}" action`, () => {
     it('does not change the state that does not contain given id', () => {
-      const action = deleteItem('42');
+      const action = deleteItemSucceeded('42');
 
       const createdState = itemFlagsMapReducer(testFlagsMapState, action);
 
@@ -55,7 +52,7 @@ describe('ItemFlags map reducer with', () => {
     });
 
     it('correctly removes item', () => {
-      const action = deleteItem('0');
+      const action = deleteItemSucceeded('0');
       const expectedState = new OrderedMap([
         [
           '1',
@@ -69,33 +66,54 @@ describe('ItemFlags map reducer with', () => {
     });
   });
 
-  describe(`"${ITEM_CHANGE_SAVED}" action`, () => {
-    it('does not change the state that does not contain given id', () => {
-      const action = saveChange('42', 'Glock');
-
-      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
-
-      expect(createdState).toBe(testFlagsMapState);
-    });
-
-    it('makes edited ItemFlags no longer editable', () => {
-      const action = saveChange('0', 'Glock');
+  describe(`"${CREATE_REQUEST_SUCCESS}" action`, () => {
+    it('replaces optimistic ItemFlags with returned one', () => {
+      const prevState = testFlagsMapState;
+      const formerId = '1';
       const expectedState = new OrderedMap([
         [
           '0',
-          new ItemFlags(),
+          new ItemFlags({
+            isBeingEdited: true,
+          }),
         ],
         [
-          '1',
-          new ItemFlags(),
+          mockId,
+          new ItemFlags({ isStored: true }),
         ],
       ]);
+      const action = createItemSucceeded(formerId, {
+        id: mockId,
+        text: 'mlock',
+      });
+
+      const createdState = itemFlagsMapReducer(prevState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${CREATE_REQUEST_STARTED}" action`, () => {
+    it('adds new ItemFlags with optimistic id to state', () => {
+      const expectedState = new OrderedMap([
+        ...testFlagsMapState,
+        [
+          mockId,
+          new ItemFlags({ isStored: false }),
+        ],
+      ]);
+
+      const action = createItemStarted(
+        mockId, 'mlock'
+      );
 
       const createdState = itemFlagsMapReducer(testFlagsMapState, action);
 
       expect(createdState).toEqual(expectedState);
     });
   });
+
+  // ---
 
   describe(`"${ITEM_MAKE_EDITABLE}" action`, () => {
     it('does nothing to state not containing given id', () => {
@@ -173,6 +191,213 @@ describe('ItemFlags map reducer with', () => {
     });
   });
 
+  describe(`"${DELETE_REQUEST_STARTED}" action`, () => {
+    it('does nothing to state not containing given id', () => {
+      const action = deleteItemStarted('42');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('sets corresponding flags', () => {
+      const action = deleteItemStarted('1');
+      const expectedState = new OrderedMap([
+        ...testFlagsMapState,
+        [
+          '1',
+          new ItemFlags({
+            isBeingEdited: false,
+            isStored: false,
+            requestError: null,
+          }),
+        ],
+      ]);
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${UPDATE_REQUEST_STARTED}" action`, () => {
+    it('does nothing to state not containing given id', () => {
+      const action = updateItemStarted(new ItemData({ id: '42' }));
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+
+    it('sets corresponding flags', () => {
+      const action = updateItemStarted(new ItemData({ id: '1' }));
+      const expectedState = new OrderedMap([
+        ...testFlagsMapState,
+        [
+          '1',
+          new ItemFlags({
+            isBeingEdited: false,
+            isStored: false,
+            requestError: null,
+          }),
+        ],
+      ]);
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${UPDATE_REQUEST_SUCCESS}" action`, () => {
+    it('does nothing to state not containing given id', () => {
+      const action = updateItemSucceeded('42');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('does nothing to ItemFlags that is already editable', () => {
+      const action = makeEditable('0');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('makes ItemFlags editable correctly', () => {
+      const action = makeEditable('1');
+      const expectedState = new OrderedMap([
+        [
+          '0',
+          new ItemFlags({
+            isBeingEdited: true,
+          }),
+        ],
+        [
+          '1',
+          new ItemFlags({
+            isBeingEdited: true,
+          }),
+        ],
+      ]);
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${UPDATE_REQUEST_FAIL}" action`, () => {
+    it('does nothing to state not containing given id', () => {
+      const action = cancelChange('42');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('does nothing to ItemFlags that is not editable', () => {
+      const action = cancelChange('1');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('makes ItemFlags not-editable correctly', () => {
+      const action = cancelChange('0');
+      const expectedState = new OrderedMap([
+        [
+          '0',
+          new ItemFlags(),
+        ],
+        [
+          '1',
+          new ItemFlags(),
+        ],
+      ]);
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${DELETE_REQUEST_FAIL}" action`, () => {
+    it('does nothing to state not containing given id', () => {
+      const action = cancelChange('42');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('does nothing to ItemFlags that is not editable', () => {
+      const action = cancelChange('1');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('makes ItemFlags not-editable correctly', () => {
+      const action = cancelChange('0');
+      const expectedState = new OrderedMap([
+        [
+          '0',
+          new ItemFlags(),
+        ],
+        [
+          '1',
+          new ItemFlags(),
+        ],
+      ]);
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${CREATE_REQUEST_FAIL}" action`, () => {
+    it('does nothing to state not containing given id', () => {
+      const action = cancelChange('42');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('does nothing to ItemFlags that is not editable', () => {
+      const action = cancelChange('1');
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toBe(testFlagsMapState);
+    });
+
+    it('makes ItemFlags not-editable correctly', () => {
+      const action = cancelChange('0');
+      const expectedState = new OrderedMap([
+        [
+          '0',
+          new ItemFlags(),
+        ],
+        [
+          '1',
+          new ItemFlags(),
+        ],
+      ]);
+
+      const createdState = itemFlagsMapReducer(testFlagsMapState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
   describe('unknown action type', () => {
     const action = { type: 'unknownType' };
 
@@ -190,4 +415,5 @@ describe('ItemFlags map reducer with', () => {
       expect(createdState).toBe(testFlagsMapState);
     });
   });
-});
+})
+;

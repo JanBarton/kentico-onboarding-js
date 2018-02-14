@@ -1,10 +1,10 @@
 import { itemReducer } from '../../../src/reducers/list/itemReducer.ts';
 import { ItemData } from '../../../src/models/ItemData.ts';
-import { ITEM_CHANGE_SAVED } from '../../../src/actions/actionTypes.ts';
-import { saveChange } from '../../../src/actions/actionCreators.ts';
+import { UPDATE_REQUEST_STARTED } from '../../../src/actions/actionTypes.ts';
+import { updateItemStarted } from '../../../src/actions/actionCreators.ts';
 
 describe('Item reducer', () => {
-  describe(`"${ITEM_CHANGE_SAVED}" action`, () => {
+  describe(`"${UPDATE_REQUEST_STARTED}" action`, () => {
     it('saves changed text correctly in ItemData', () => {
       const prevState = new ItemData({
         text: 'Mlock',
@@ -12,7 +12,8 @@ describe('Item reducer', () => {
       const expectedState = new ItemData({
         text: 'Glock',
       });
-      const action = saveChange('42', 'Glock');
+
+      const action = updateItemStarted(expectedState);
 
       const createdState = itemReducer(prevState, action);
 

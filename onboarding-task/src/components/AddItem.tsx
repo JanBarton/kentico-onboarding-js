@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import * as classNames from 'classnames';
+import { FormEvent } from 'react';
 
 import { isItemTextValid } from '../utils/validation';
-import { FormEvent } from 'react';
 
 export interface IAddItemCallbackProps {
   onAddItem: (text: string) => void;
@@ -13,7 +13,7 @@ interface IAddItemState {
   currentText: string;
 }
 
-class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> {
+export class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> {
 
   static displayName = 'AddItem';
 
@@ -29,8 +29,8 @@ class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> 
   }
 
   _onChange = (event: FormEvent<HTMLInputElement>): void => {
-    const setStateText = (currentText: string) => (() => ({ currentText }));
-    this.setState(setStateText(event.currentTarget.value));
+    const currentText = event.currentTarget.value;
+    this.setState(() => ({ currentText }));
   };
 
   _addItem = (event: FormEvent<HTMLFormElement>): void => {
@@ -39,13 +39,13 @@ class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> 
 
     if (isItemTextValid(currText)) {
       this.props.onAddItem(currText);
-      this.setState(() => ({ currentText: '' }));
+      this.setState(() => ({currentText: ''}));
     }
   };
 
   render() {
     return (
-      <form onSubmit={this._addItem} className="form-inline list-group-item">
+      <form onSubmit={this._addItem} className="form-inline list-group-item row">
         <input
           type="text"
           className="form-control"
@@ -54,7 +54,7 @@ class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> 
         />
         <button
           type="submit"
-          className={classNames('form-control', 'btn', 'btn-default', { disabled: !isItemTextValid(this.state.currentText) })}
+          className={classNames('form-control', 'btn', 'btn-default', {disabled: !isItemTextValid(this.state.currentText)})}
         >
           Add
         </button>
@@ -62,5 +62,3 @@ class AddItem extends React.PureComponent<IAddItemCallbackProps, IAddItemState> 
     );
   }
 }
-
-export { AddItem };

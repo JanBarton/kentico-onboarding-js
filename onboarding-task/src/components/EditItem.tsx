@@ -21,7 +21,7 @@ interface IEditItemState {
   text: string;
 }
 
-class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbackProps, IEditItemState> {
+export class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbackProps, IEditItemState> {
   static displayName = 'EditItem';
 
   static propTypes = {
@@ -50,10 +50,8 @@ class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbac
   };
 
   _saveChange = () => {
-    const editedText = this.state.text;
-
-    if (isItemTextValid(editedText)) {
-      this.props.onSave(editedText);
+    if (isItemTextValid(this.state.text)) {
+      this.props.onSave(this.state.text);
     }
   };
 
@@ -73,8 +71,6 @@ class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbac
   };
 
   render() {
-    const editedText = this.state.text;
-
     return (
       <div className="form-inline">
         <span>{this.props.item.index}. </span>
@@ -82,12 +78,12 @@ class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbac
           autoFocus
           className="form-control"
           type="text"
-          value={editedText}
+          value={this.state.text}
           onChange={this._textChange}
           onKeyUp={this._keyUp}
         />
         <button
-          className={classNames('btn', 'btn-primary', 'form-control', {disabled: !isItemTextValid(editedText)})}
+          className={classNames('btn', 'btn-primary', 'form-control', {disabled: !isItemTextValid(this.state.text)})}
           onClick={this._saveChange}
         >
           Save
@@ -108,5 +104,3 @@ class EditItem extends React.PureComponent<IEditItemDataProps & IEditItemCallbac
     );
   }
 }
-
-export { EditItem };

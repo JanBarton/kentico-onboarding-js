@@ -4,14 +4,16 @@ import { itemFlagsMapReducer } from '../../../src/reducers/list/itemFlagsMapRedu
 import { itemsReducer } from '../../../src/reducers/list/itemsReducer.ts';
 import { ItemData } from '../../../src/models/ItemData.ts';
 import {
-  ITEM_CHANGE_SAVED,
-  ITEM_CREATED,
-  ITEM_DELETED,
+  DELETE_REQUEST_SUCCESS,
+  CREATE_REQUEST_STARTED,
+  CREATE_REQUEST_SUCCESS,
+  UPDATE_REQUEST_STARTED,
 } from '../../../src/actions/actionTypes.ts';
 import {
-  createItemFactory,
-  deleteItem,
-  saveChange,
+  deleteItemSucceeded,
+  createItemSucceeded,
+  createItemStarted,
+  updateItemStarted,
 } from '../../../src/actions/actionCreators.ts';
 
 describe('Items map reducer with', () => {
@@ -32,9 +34,8 @@ describe('Items map reducer with', () => {
     ],
   ]);
   const mockId = '123';
-  const mockIdGenerator = () => mockId;
 
-  describe(`"${ITEM_CREATED}" action`, () => {
+  describe(`"${CREATE_REQUEST_STARTED}" action`, () => {
     it('adds item to map', () => {
       const prevState = testItemsMapState;
       const expectedState = new OrderedMap([
@@ -47,7 +48,7 @@ describe('Items map reducer with', () => {
           }),
         ],
       ]);
-      const action = createItemFactory(mockIdGenerator)('Block');
+      const action = createItemStarted(mockId, 'Block');
 
       const createdState = itemsReducer(prevState, action);
 
@@ -55,9 +56,40 @@ describe('Items map reducer with', () => {
     });
   });
 
-  describe(`"${ITEM_DELETED}" action`, () => {
+  describe(`"${CREATE_REQUEST_SUCCESS}" action`, () => {
+    it('removes optimistic item and replaces it with a new one', () => {
+      const prevState = testItemsMapState;
+      const expectedState = new OrderedMap([
+        [
+          '0',
+          new ItemData({
+            id: '0',
+            text: 'Mlock',
+          }),
+        ],
+        [
+          '2',
+          new ItemData({
+            id: '2',
+            text: 'Glock',
+          }),
+        ],
+      ]);
+      const jsonResponseItem = {
+        id: '2',
+        text: 'Glock',
+      };
+      const action = createItemSucceeded('1', jsonResponseItem);
+
+      const createdState = itemsReducer(prevState, action);
+
+      expect(createdState).toEqual(expectedState);
+    });
+  });
+
+  describe(`"${DELETE_REQUEST_SUCCESS}" action`, () => {
     it('does nothing to state not containing given id', () => {
-      const action = deleteItem('42');
+      const action = deleteItemSucceeded('42');
       const prevState = testItemsMapState;
 
       const createdState = itemsReducer(prevState, action);
@@ -66,7 +98,7 @@ describe('Items map reducer with', () => {
     });
 
     it('correctly removes item', () => {
-      const action = deleteItem('0');
+      const action = deleteItemSucceeded('0');
       const prevState = testItemsMapState;
       const expectedState = new OrderedMap([
         [
@@ -84,9 +116,13 @@ describe('Items map reducer with', () => {
     });
   });
 
-  describe(`"${ITEM_CHANGE_SAVED}" action`, () => {
+  describe(`"${UPDATE_REQUEST_STARTED}" action`, () => {
     it('does nothing to state not containing given id', () => {
-      const action = saveChange('42', 'Glock');
+      const putItem = new ItemData({
+        id: '41',
+        text: 'Glock',
+      });
+      const action = updateItemStarted(putItem);
 
       const createdState = itemsReducer(testItemsMapState, action);
 
@@ -94,7 +130,11 @@ describe('Items map reducer with', () => {
     });
 
     it('correctly changes ItemData', () => {
-      const action = saveChange('1', 'Flock');
+      const putItem = new ItemData({
+        id: '1',
+        text: 'Flock',
+      });
+      const action = updateItemStarted(putItem);
       const prevState = testItemsMapState;
       const expectedState = new OrderedMap([
         [

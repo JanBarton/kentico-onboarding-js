@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import * as classNames from 'classnames';
 
 import { ViewItem } from './ViewItem';
 import { EditItem } from './EditItem';
 import { IViewItem } from '../models/ViewItem';
+import { ItemWithRetry } from './ItemWithRetry';
+import { ThunkAction } from '../interfaces/IAction';
 
 export interface IListItemDataProps {
   item: IViewItem;
@@ -14,27 +17,31 @@ export interface IListItemCallbackProps {
   onDelete: () => void;
   onSave: (text: string) => void;
   onCancel: () => void;
+  onRetry: (action: ThunkAction) => void;
 }
 
-const ListItem: React.StatelessComponent<IListItemDataProps & IListItemCallbackProps> = (props) => {
-  if (props.item.isBeingEdited) {
-    return (
-      <EditItem
+export const ListItem: React.StatelessComponent<IListItemDataProps & IListItemCallbackProps> = (props) => (
+  <li className={classNames('list-group-item', 'row', {'list-group-item-danger': props.item.requestError != null})}>
+    {props.item.requestError == null ? (
+      props.item.isBeingEdited ? (
+        <EditItem
+          item={props.item}
+          onDelete={props.onDelete}
+          onSave={props.onSave}
+          onCancel={props.onCancel}
+        />
+      ) : (
+        <ViewItem
+          item={props.item}
+          onClick={props.onClick}
+        />)) : (
+      <ItemWithRetry
         item={props.item}
-        onDelete={props.onDelete}
-        onSave={props.onSave}
-        onCancel={props.onCancel}
+        onRetry={props.onRetry}
       />
-    );
-  }
-
-  return (
-    <ViewItem
-      item={props.item}
-      onClick={props.onClick}
-    />
-  );
-};
+    )}
+  </li>
+);
 
 ListItem.displayName = 'ListItem';
 
@@ -49,5 +56,3 @@ ListItem.propTypes = {
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
-
-export { ListItem };

@@ -12,6 +12,8 @@ describe('View item memoization tests', () => {
       index: 1,
       text: 'Mlock',
       isBeingEdited: true,
+      isStored: false,
+      requestError: null,
     };
 
     const createdViewItem = new ViewItem(1, testItemData, testItemFlags);
