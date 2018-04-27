@@ -1,43 +1,43 @@
-import { ComponentClass } from 'react';
 import * as PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {
+  connect,
+  ComponentClass,
+} from 'react-redux';
 import {
   IListItemStaticCallbackProps,
-  ListItemStatic as ListItemStaticComponent
+  IListItemStaticDataProps,
+  IListItemStaticOwnProps,
+  ListItemStatic as ListItemStaticComponent,
+  listItemStaticSharedPropTypes,
 } from '../components/ListItemStatic';
-import { openItemForEditing } from '../actions';
 import { Dispatch } from 'redux';
-import { IAction } from '../models/IAction';
-import { IListItem } from '../models/IListItem';
+import { toggleItem } from '../actions';
+import { IAction } from '../models/interfaces/IAction';
+import { IAppState } from '../models/state/IAppState';
+import { isClickable } from '../utils/isClickable';
+import { Uuid } from '../models/Uuid';
+
+interface IListItemStaticContainerProps extends IListItemStaticOwnProps {
+  readonly itemId: Uuid;
+}
 
 const propTypes = {
-  itemNumber: PropTypes.number.isRequired,
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-  }),
-  onTextSelection: PropTypes.func.isRequired,
+  ...listItemStaticSharedPropTypes,
+  itemId: PropTypes.string.isRequired,
 };
 
-interface IListItemStaticContainerDataProps {
-  readonly itemNumber: number;
-  readonly item: IListItem;
-}
-
-interface IListItemStaticContainerCallbackProps {
-  readonly onTextSelection: (startOffset: number, endOffset: number) => void;
-}
-
-interface IListItemStaticContainerProps extends IListItemStaticContainerCallbackProps, IListItemStaticContainerDataProps {}
-
-const mapDispatchToProps = (dispatch: Dispatch<IAction>, ownProps: IListItemStaticContainerProps): IListItemStaticCallbackProps => ({
-  onItemOpened: () => dispatch(openItemForEditing(
-    ownProps.item.id,
-  )),
+const mapStateToProps = ({ list }: IAppState, { itemSyncInfo, itemId }: IListItemStaticContainerProps): IListItemStaticDataProps => ({
+  isClickable: isClickable(itemSyncInfo),
+  item: list.items.get(itemId),
 });
 
-const ListItemStatic: ComponentClass<IListItemStaticContainerProps> = connect(
-  null,
+const mapDispatchToProps = (dispatch: Dispatch<IAction>, { itemId }: IListItemStaticContainerProps): IListItemStaticCallbackProps => ({
+  onItemOpened: () => dispatch(toggleItem(itemId)),
+});
+
+
+const ListItemStatic: ComponentClass<IListItemStaticOwnProps> = connect(
+  mapStateToProps,
   mapDispatchToProps,
 )(ListItemStaticComponent);
 

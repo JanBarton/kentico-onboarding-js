@@ -3,14 +3,13 @@ import * as PropTypes from 'prop-types';
 import { HotKeys } from 'react-hotkeys';
 import { keyActions } from '../constants/keys';
 import { isTextEmpty } from '../utils/validation';
-import { IAction } from '../models/IAction';
 
 export interface INewItemFormCallbackProps {
-  readonly onSubmit: (text: string) => IAction;
+  readonly onSubmit: (text: string) => void;
 }
 
 interface INewItemFormState {
-  newItemText: string;
+  readonly newItemText: string;
 }
 
 export class NewItemForm extends React.PureComponent<INewItemFormCallbackProps, INewItemFormState> {
@@ -28,11 +27,12 @@ export class NewItemForm extends React.PureComponent<INewItemFormCallbackProps, 
     };
   }
 
-  _onInputChange = (e: React.FormEvent<HTMLInputElement>): void => this.setState({
-    newItemText: e.currentTarget.value,
-  });
+  _onInputChange = (e: React.FormEvent<HTMLInputElement>) =>
+    this.setState({
+      newItemText: e.currentTarget.value,
+    });
 
-  _submitItemText = (): void => {
+  _submitItemText = () => {
     const { onSubmit } = this.props;
     const { newItemText } = this.state;
 
@@ -43,7 +43,7 @@ export class NewItemForm extends React.PureComponent<INewItemFormCallbackProps, 
     });
   };
 
-  _onEnterPress = (): void => {
+  _onEnterPress = () => {
     const { newItemText } = this.state;
 
     if (!isTextEmpty(newItemText)) {
@@ -51,7 +51,7 @@ export class NewItemForm extends React.PureComponent<INewItemFormCallbackProps, 
     }
   };
 
-  _onEscPress = (): void => {
+  _onEscPress = () => {
     this.setState({
       newItemText: '',
     });
@@ -67,27 +67,26 @@ export class NewItemForm extends React.PureComponent<INewItemFormCallbackProps, 
     };
 
     return (
-      <HotKeys
-        {...{ className: 'row' }}
-        handlers={handlers}
-      >
-        <div className="input-group col">
-          <input
-            className="form-control col-md-6 rounded"
-            type="text"
-            placeholder="Item name cannot be empty"
-            value={newItemText}
-            onChange={this._onInputChange}
-            autoFocus={true}
-          />
-          <button
-            className="btn btn-primary ml-3"
-            onClick={this._submitItemText}
-            disabled={!enableAddButton}
-            title="Adds new item to list. Text cannot be empty"
-          >
-            Add
-          </button>
+      <HotKeys handlers={handlers}>
+        <div className="row">
+          <div className="input-group col">
+            <input
+              className="form-control col-md-6 rounded"
+              type="text"
+              placeholder="Item name cannot be empty"
+              value={newItemText}
+              onChange={this._onInputChange}
+              autoFocus={true}
+            />
+            <button
+              className="btn btn-primary ml-3"
+              onClick={this._submitItemText}
+              disabled={!enableAddButton}
+              title="Adds new item to list. Text cannot be empty"
+            >
+              Add
+            </button>
+          </div>
         </div>
       </HotKeys>
     );

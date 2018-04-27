@@ -1,4 +1,4 @@
-import { createNewId } from '../../src/utils/createNewId';
+import * as createNewId from 'uuid/v4';
 
 describe('createNewId', () => {
   it('will create unique id when called 2 times', () => {
@@ -11,11 +11,11 @@ describe('createNewId', () => {
   });
 
   it('will generate correct GUID specified in RFC4122', () => {
-    const guidStructure = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidStructure = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-    const guid = createNewId();
+    const id = createNewId();
 
-    expect(guid)
-      .toMatch(guidStructure);
+    expect(id)
+      .toMatch(uuidStructure);
   });
 });

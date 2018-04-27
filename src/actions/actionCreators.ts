@@ -1,32 +1,45 @@
-import { IAction } from '../models/IAction';
+import { IAction } from '../models/interfaces/IAction';
 import * as ActionTypes from '../constants/actionTypes';
-import { Guid } from '../models/Guid';
+import { Uuid } from '../models/Uuid';
+import {
+  ITEM_ADD_REVERT,
+  ITEM_DELETE_REVERT,
+  ITEM_DELETE_AFTER_UPDATE_REVERT,
+  ITEM_UPDATE_REVERT,
+} from '../constants/actionTypes';
 
-export const openItemForEditing = (itemId: Guid): IAction => ({
-  type: ActionTypes.ITEM_OPENED_FOR_EDITING,
-  payload: {
-    itemId,
-  },
+export const deleteUnsavedItem = (id: Uuid): IAction => ({
+  type: ActionTypes.UNSAVED_ITEM_DELETE,
+  payload: { id }
 });
 
-export const deleteItem = (itemId: Guid): IAction => ({
-  type: ActionTypes.ITEM_DELETED,
-  payload: {
-    itemId,
-  },
+export const toggleItem = (id: Uuid): IAction => ({
+  type: ActionTypes.ITEM_TOGGLE,
+  payload: { id }
 });
 
-export const saveItemChanges = (itemId: Guid, newText: string): IAction => ({
-  type: ActionTypes.ITEM_CHANGES_SAVED,
-  payload: {
-    itemId,
-    newText,
-  },
+export const desyncItem = (id: Uuid): IAction => ({
+  type: ActionTypes.ITEM_SYNC_FAILED,
+  payload: { id }
 });
 
-export const cancelItemChanges = (itemId: Guid): IAction => ({
-  type: ActionTypes.ITEM_CHANGES_CANCELED,
-  payload: {
-    itemId,
-  },
+// Revert
+export const revertDelete = (id: Uuid): IAction => ({
+  type: ITEM_DELETE_REVERT,
+  payload: { id },
+});
+
+export const revertAdd = (id: Uuid): IAction => ({
+  type: ITEM_ADD_REVERT,
+  payload: { id },
+});
+
+export const revertUpdate = (id: Uuid): IAction => ({
+  type: ITEM_UPDATE_REVERT,
+  payload: { id },
+});
+
+export const revertDeleteAfterFailedUpdate = (id: Uuid): IAction => ({
+  type: ITEM_DELETE_AFTER_UPDATE_REVERT,
+  payload: { id },
 });

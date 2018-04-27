@@ -1,30 +1,39 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-import { ListItemForm } from '../containers/ListItemForm';
 import { ListItemStatic } from '../containers/ListItemStatic';
-import { IListItem } from '../models/IListItem';
+import { ListItemForm } from '../containers/ListItemForm';
+import { Uuid } from '../models/Uuid';
+import { IItemSyncInfo } from '../models/interfaces/IItemSyncInfo';
 
 export interface IListItemDataProps {
-  readonly item: IListItem;
+  readonly isBeingEdited: boolean;
 }
 
-interface IListItemProps extends IListItemDataProps {
+export interface IListItemOwnProps {
   readonly itemNumber: number;
+  readonly itemId: Uuid;
+  readonly itemSyncInfo: IItemSyncInfo;
 }
+
+interface IListItemProps extends IListItemDataProps, IListItemOwnProps {}
 
 interface IListItemState {
-  selectionRangeStarts: number;
-  selectionRangeEnds: number;
+  readonly selectionRangeStarts: number;
+  readonly selectionRangeEnds: number;
 }
+
+export const listItemSharedPropTypes = {
+  itemNumber: PropTypes.number.isRequired,
+  itemId: PropTypes.string.isRequired,
+  itemSyncInfo: PropTypes.object.isRequired,
+};
 
 export class ListItem extends React.PureComponent<IListItemProps, IListItemState> {
   static displayName = 'ListItem';
 
   static propTypes = {
-    itemNumber: PropTypes.number.isRequired,
-    item: PropTypes.shape({
-      isBeingEdited: PropTypes.bool.isRequired,
-    }),
+    ...listItemSharedPropTypes,
+    isBeingEdited: PropTypes.bool.isRequired,
   };
 
   constructor(props: IListItemProps) {
@@ -36,7 +45,7 @@ export class ListItem extends React.PureComponent<IListItemProps, IListItemState
     };
   }
 
-  _selectText = (selectionRangeStarts: number, selectionRangeEnds: number): void => {
+  _selectText = (selectionRangeStarts: number, selectionRangeEnds: number) => {
     this.setState({
       selectionRangeStarts,
       selectionRangeEnds,
@@ -44,21 +53,16 @@ export class ListItem extends React.PureComponent<IListItemProps, IListItemState
   };
 
   render() {
-    const {
-      itemNumber,
-      item,
-    } = this.props;
+    const { isBeingEdited, ...props } = this.props;
 
-    return item.isBeingEdited ?
-      <ListItemForm
-        itemNumber={itemNumber}
-        item={item}
-        selectionRangeStarts={this.state.selectionRangeStarts}
+    return isBeingEdited
+      ? <ListItemForm
+        { ...props }
         selectionRangeEnds={this.state.selectionRangeEnds}
-      /> :
-      <ListItemStatic
-        itemNumber={itemNumber}
-        item={item}
+        selectionRangeStarts={this.state.selectionRangeStarts}
+      />
+      : <ListItemStatic
+        { ...props }
         onTextSelection={this._selectText}
       />;
   }
