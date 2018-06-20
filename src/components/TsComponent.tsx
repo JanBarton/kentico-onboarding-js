@@ -14,3 +14,4 @@ export class TsComponent extends React.Component<ITsComponentProps, undefined> {
     );
   }
 }
+

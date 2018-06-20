@@ -1,33 +1,110 @@
 import React, { PureComponent } from 'react';
-import assignment from './../../assignment.gif';
-
-import { TsComponent } from './TsComponent.tsx';
+import { ListItem } from './ListItem';
+import { ListItemEditor } from './ListItemEditor';
+import Immutable from 'immutable';
 
 export class List extends PureComponent {
+  static displayName = 'List';
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      newItemText: '',
+      items: Immutable.List(),
+    };
+  }
+
+  onItemClick = (index) => {
+    const oldItems = this.state.items;
+    const newItems = oldItems.update(index, (oldItem) => {
+      return {
+        ...oldItem,
+        isBeingEdited: true,
+      };
+    });
+    this.setState({
+      items: newItems,
+    });
+  };
+
+  onItemCancel = (index) => {
+    const oldItems = this.state.items;
+    const newItems = oldItems.update(index, (oldItem) => {
+      return {
+        ...oldItem,
+        isBeingEdited: false,
+      };
+    });
+    this.setState({
+      items: newItems,
+    });
+  };
+
+  onItemDelete = (index) => {
+    const oldItems = this.state.items;
+    const newItems = oldItems.delete(index);
+    this.setState({
+      items: newItems,
+    });
+  };
+
+  onItemSave = (index, text) => {
+    const oldItems = this.state.items;
+    const newItem = {
+      text,
+      isBeingEdited: false,
+    };
+    const newItems = oldItems.update(index, () => {
+      return newItem;
+    });
+    this.setState({
+      items: newItems,
+    });
+  };
+
+  onChangeHandler = (event) => {
+    const newValue = event.target.value;
+    this.setState({
+      newItemText: newValue,
+    });
+  };
+
+  onClickHandler = () => {
+    const newItem = {
+      text: this.state.newItemText,
+      isBeingEdited: false,
+    };
+    const newList = this.state.items.push(newItem);
+    this.setState({
+      items: newList,
+      newItemText: '',
+    });
+  };
+
   render() {
     return (
       <div className="row">
-        {/* TODO: You can delete the assignment part once you do not need it */}
-        <div className="row">
-          <div className="col-sm-12 text-center">
-            <TsComponent name="𝕱𝖆𝖓𝖈𝖞" />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-sm-12">
-            <p className="lead text-center">Desired functionality is captured in the gif image. </p>
-            <p className="lead text-center"><b>Note: </b>Try to make solution easily extensible (e.g. more displayed fields per item like
-              <code>dateCreated</code>).</p>
-            <img src={assignment} alt="assignment" className="img--assignment" />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-sm-12 col-md-offset-2 col-md-8">
-            <pre>
-              // TODO: implement the list here :)
-            </pre>
+        <div className="col-sm-12 col-md-8">
+          <ul className="list-group">
+            {this.state.items.map((item, index) => {
+              if (item.isBeingEdited) {
+                return (
+                  <ListItemEditor
+                    key={index}
+                    text={item.text}
+                    index={index}
+                    onItemCancel={this.onItemCancel}
+                    onItemDelete={this.onItemDelete}
+                    onItemSave={this.onItemSave}
+                  />
+                );
+              }
+              return <ListItem key={index} text={item.text} index={index} onItemClick={this.onItemClick} />;
+            })}
+          </ul>
+          <div className="list-group">
+            <input value={this.state.newItemText} onChange={this.onChangeHandler} type="text" />
+            <button onClick={this.onClickHandler} className="btn btn-primary">Add</button>
           </div>
         </div>
       </div>
