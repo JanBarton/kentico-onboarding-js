@@ -12,14 +12,29 @@ export class List extends PureComponent {
 
     this.state = {
       newItemText: '',
-      items: Immutable.List(),
+      items: Immutable.List([
+        {
+          text: 'A',
+          isBeingEdited: false,
+          id: 0,
+        }, {
+          text: 'B',
+          isBeingEdited: false,
+          id: 1,
+        }, {
+          text: 'C',
+          isBeingEdited: false,
+          id: 2,
+        },
+      ]), // { text, isBeingEdited, id (nu,ber( }
       orderDirection: 'asc',
     };
   }
 
-  onItemClick = (index) => {
+  onItemClick = (itemId) => {
     const oldItems = this.state.items;
-    const newItems = oldItems.update(index, (oldItem) => {
+    const indexOfClickedItem = oldItems.findIndex((item) => item.id === itemId);
+    const newItems = oldItems.update(indexOfClickedItem, (oldItem) => {
       return {
         ...oldItem,
         isBeingEdited: true,
@@ -30,9 +45,10 @@ export class List extends PureComponent {
     });
   };
 
-  onItemCancel = (index) => {
+  onItemCancel = (itemId) => {
     const oldItems = this.state.items;
-    const newItems = oldItems.update(index, (oldItem) => {
+    const indexOfClickedItem = oldItems.findIndex((item) => item.id === itemId);
+    const newItems = oldItems.update(indexOfClickedItem, (oldItem) => {
       return {
         ...oldItem,
         isBeingEdited: false,
@@ -43,25 +59,29 @@ export class List extends PureComponent {
     });
   };
 
-  onItemDelete = (index) => {
+  onItemDelete = (itemId) => {
     const oldItems = this.state.items;
-    const newItems = oldItems.delete(index);
+    const indexOfDeletedItem = oldItems.findIndex((item) => item.id === itemId);
+    const newItems = oldItems.delete(indexOfDeletedItem);
     this.setState({
       items: newItems,
     });
   };
 
-  onItemSave = (index, text) => {
+  // tady si skoncil, editnutej text se sice ulozi, ale jako id dostane NaN
+  onItemSave = (itemId, text) => {
     const oldItems = this.state.items;
     const newItem = {
       text,
       isBeingEdited: false,
     };
-    const newItems = oldItems.update(index, () => {
+    const indexOfSavedItem = oldItems.findIndex((item) => item.id === itemId);
+    const newItems = oldItems.update(indexOfSavedItem, () => {
       return newItem;
     });
     this.setState({
       items: newItems,
+      id: indexOfSavedItem,
     });
   };
 
@@ -109,20 +129,20 @@ export class List extends PureComponent {
         <div className="col-sm-12 col-md-8">
           <ListItemOrder orderDirection={this.state.orderDirection} onSortByToggle={this.onToggleSortBy} />
           <ul className="list-group">
-            {this.getSortedItems().map((item, index) => {
+            {this.getSortedItems().map((item) => {
               if (item.isBeingEdited) {
                 return (
                   <ListItemEditor
-                    key={index}
+                    key={item.id}
                     text={item.text}
-                    index={index}
+                    itemId={item.id}
                     onItemCancel={this.onItemCancel}
                     onItemDelete={this.onItemDelete}
                     onItemSave={this.onItemSave}
                   />
                 );
               }
-              return <ListItem key={index} text={item.text} index={index} onItemClick={this.onItemClick} />;
+              return <ListItem key={item.id} text={item.text} index={item.id} onItemClick={this.onItemClick} />;
             })}
           </ul>
           <div className="list-group">

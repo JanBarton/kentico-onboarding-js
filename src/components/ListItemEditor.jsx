@@ -5,6 +5,7 @@ export class ListItemEditor extends React.PureComponent {
   static propTypes = {
     text: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
+    itemId: PropTypes.number.isRequired,
     onItemCancel: PropTypes.func.isRequired,
     onItemDelete: PropTypes.func.isRequired,
     onItemSave: PropTypes.func.isRequired,
@@ -18,13 +19,13 @@ export class ListItemEditor extends React.PureComponent {
   }
 
   onCancel = () => {
-    this.props.onItemCancel(this.props.index);
+    this.props.onItemCancel(this.props.itemId);
   };
   onDelete = () => {
-    this.props.onItemDelete(this.props.index);
+    this.props.onItemDelete(this.props.itemId);
   };
   onSave = () => {
-    this.props.onItemSave(this.props.index, this.state.textEditorValue);
+    this.props.onItemSave(this.props.itemId, this.state.textEditorValue);
   };
   onChange = (event) => {
     const targetValue = event.target.value;
