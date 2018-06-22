@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { ListItem } from './ListItem';
 import { ListItemEditor } from './ListItemEditor';
+import { ListItemOrder } from './ListItemOrder';
 import Immutable from 'immutable';
 
 export class List extends PureComponent {
@@ -11,6 +12,7 @@ export class List extends PureComponent {
     this.state = {
       newItemText: '',
       items: Immutable.List(),
+      // orderDirection: asc | desc
     };
   }
 
@@ -61,6 +63,15 @@ export class List extends PureComponent {
       items: newItems,
     });
   };
+  onItemAlphaSort = () => {
+    const unsortedItems = this.state.items;
+    const sortedItems = unsortedItems.sort(
+      (a, b) => (a.text).localeCompare((b.text))
+    );
+    this.setState({
+      items: sortedItems,
+    });
+  };
 
   onChangeHandler = (event) => {
     const newValue = event.target.value;
@@ -85,6 +96,7 @@ export class List extends PureComponent {
     return (
       <div className="row">
         <div className="col-sm-12 col-md-8">
+          <ListItemOrder onItemAlphaSort={this.onItemAlphaSort} />
           <ul className="list-group">
             {this.state.items.map((item, index) => {
               if (item.isBeingEdited) {

@@ -12,7 +12,6 @@ export class ListItemEditor extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
     this.state = {
       textEditorValue: this.props.text,
     };
