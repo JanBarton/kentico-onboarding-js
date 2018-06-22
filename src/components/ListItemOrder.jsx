@@ -3,16 +3,19 @@ import React, { PropTypes } from 'react';
 export class ListItemOrder extends React.PureComponent {
   static displayName = 'ListItemOrder';
   static propTypes = {
-    onItemAlphaSort: PropTypes.func.isRequired,
+    onSortByToggle: PropTypes.func.isRequired,
+    orderDirection: PropTypes.string.isRequired,
   };
 
-  onClickOrder = () => {
-    this.props.onItemAlphaSort(this.props.text);
+  onSortByToggle = () => {
+    this.props.onSortByToggle();
   };
 
   render() {
     return (
-      <button className="btn" onClick={this.onClickOrder}>Serad podle abecedy</button>
+      <button className="btn" onClick={this.onSortByToggle}>
+        Seradit podle abecedy: {this.props.orderDirection === 'asc' ? 'Sestupne' : 'Vzestupne'}
+      </button>
     );
   }
 }

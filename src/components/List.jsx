@@ -9,10 +9,11 @@ export class List extends PureComponent {
 
   constructor(props) {
     super(props);
+
     this.state = {
       newItemText: '',
       items: Immutable.List(),
-      // orderDirection: asc | desc
+      orderDirection: 'asc',
     };
   }
 
@@ -63,13 +64,23 @@ export class List extends PureComponent {
       items: newItems,
     });
   };
-  onItemAlphaSort = () => {
-    const unsortedItems = this.state.items;
-    const sortedItems = unsortedItems.sort(
-      (a, b) => (a.text).localeCompare((b.text))
+
+  getSortedItems = () => {
+    if (this.state.orderDirection === 'asc') {
+      return this.state.items.sort(
+        (a, b) => (a.text).localeCompare((b.text))
+      );
+    }
+
+    return this.state.items.sort(
+      (a, b) => (b.text).localeCompare((a.text))
     );
+  };
+
+  onToggleSortBy = () => {
+    const newDirection = this.state.orderDirection === 'asc' ? 'desc' : 'asc';
     this.setState({
-      items: sortedItems,
+      orderDirection: newDirection,
     });
   };
 
@@ -96,9 +107,9 @@ export class List extends PureComponent {
     return (
       <div className="row">
         <div className="col-sm-12 col-md-8">
-          <ListItemOrder onItemAlphaSort={this.onItemAlphaSort} />
+          <ListItemOrder orderDirection={this.state.orderDirection} onSortByToggle={this.onToggleSortBy} />
           <ul className="list-group">
-            {this.state.items.map((item, index) => {
+            {this.getSortedItems().map((item, index) => {
               if (item.isBeingEdited) {
                 return (
                   <ListItemEditor
