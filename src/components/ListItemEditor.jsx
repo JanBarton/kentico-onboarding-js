@@ -5,7 +5,7 @@ export class ListItemEditor extends React.PureComponent {
   static propTypes = {
     text: PropTypes.string.isRequired,
     index: PropTypes.number.isRequired,
-    itemId: PropTypes.number.isRequired,
+    itemId: PropTypes.string.isRequired,
     onItemCancel: PropTypes.func.isRequired,
     onItemDelete: PropTypes.func.isRequired,
     onItemSave: PropTypes.func.isRequired,

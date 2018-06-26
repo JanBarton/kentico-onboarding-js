@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { ListItem } from './ListItem';
 import { ListItemEditor } from './ListItemEditor';
 import { ListItemOrder } from './ListItemOrder';
+import { generateId } from '../utils/IDgen';
 import Immutable from 'immutable';
 
 export class List extends PureComponent {
@@ -9,24 +10,9 @@ export class List extends PureComponent {
 
   constructor(props) {
     super(props);
-
     this.state = {
       newItemText: '',
-      items: Immutable.List([
-        {
-          text: 'A',
-          isBeingEdited: false,
-          id: 0,
-        }, {
-          text: 'B',
-          isBeingEdited: false,
-          id: 1,
-        }, {
-          text: 'C',
-          isBeingEdited: false,
-          id: 2,
-        },
-      ]), // { text, isBeingEdited, id (nu,ber( }
+      items: Immutable.List(),
       orderDirection: 'asc',
     };
   }
@@ -68,20 +54,19 @@ export class List extends PureComponent {
     });
   };
 
-  // tady si skoncil, editnutej text se sice ulozi, ale jako id dostane NaN
   onItemSave = (itemId, text) => {
     const oldItems = this.state.items;
+    const indexOfSavedItem = oldItems.findIndex((item) => item.id === itemId);
     const newItem = {
       text,
       isBeingEdited: false,
+      id: itemId,
     };
-    const indexOfSavedItem = oldItems.findIndex((item) => item.id === itemId);
     const newItems = oldItems.update(indexOfSavedItem, () => {
       return newItem;
     });
     this.setState({
       items: newItems,
-      id: indexOfSavedItem,
     });
   };
 
@@ -115,6 +100,7 @@ export class List extends PureComponent {
     const newItem = {
       text: this.state.newItemText,
       isBeingEdited: false,
+      id: generateId(),
     };
     const newList = this.state.items.push(newItem);
     this.setState({
@@ -129,20 +115,21 @@ export class List extends PureComponent {
         <div className="col-sm-12 col-md-8">
           <ListItemOrder orderDirection={this.state.orderDirection} onSortByToggle={this.onToggleSortBy} />
           <ul className="list-group">
-            {this.getSortedItems().map((item) => {
+            {this.getSortedItems().map((item, index) => {
               if (item.isBeingEdited) {
                 return (
                   <ListItemEditor
                     key={item.id}
                     text={item.text}
                     itemId={item.id}
+                    index={index}
                     onItemCancel={this.onItemCancel}
                     onItemDelete={this.onItemDelete}
                     onItemSave={this.onItemSave}
                   />
                 );
               }
-              return <ListItem key={item.id} text={item.text} index={item.id} onItemClick={this.onItemClick} />;
+              return <ListItem key={item.id} text={item.text} index={index} itemId={item.id} onItemClick={this.onItemClick} />;
             })}
           </ul>
           <div className="list-group">
