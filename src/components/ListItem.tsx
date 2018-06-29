@@ -1,6 +1,19 @@
-import React, { PropTypes } from 'react';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 
-export class ListItem extends React.PureComponent {
+interface IListItemDataProps {
+  text: string;
+  index: number;
+  itemId: string;
+}
+
+interface IListItemCallbackProps {
+  onItemClick: (itemId: string) => void;
+}
+interface IListItemProps extends IListItemDataProps, IListItemCallbackProps {
+}
+
+export class ListItem extends React.PureComponent<IListItemProps> {
   static displayName = 'ListItem';
   static propTypes = {
     text: PropTypes.string.isRequired,
@@ -8,7 +21,7 @@ export class ListItem extends React.PureComponent {
     itemId: PropTypes.string.isRequired,
     onItemClick: PropTypes.func.isRequired,
   };
-  onClick = () => {
+  onClick = (): void => {
     this.props.onItemClick(this.props.itemId);
   };
 

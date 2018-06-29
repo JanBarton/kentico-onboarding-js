@@ -1,6 +1,26 @@
-import React, { PropTypes } from 'react';
+import * as React from 'react';
+import * as PropTypes from 'prop-types';
 
-export class ListItemEditor extends React.PureComponent {
+interface IListItemEditorDataProps {
+  readonly text: string;
+  readonly index: number;
+  readonly itemId: string;
+}
+
+interface IListItemEditorCallbackProps {
+  readonly onItemCancel: (itemId: string) => void;
+  readonly onItemDelete: (itemId: string) => void;
+  readonly onItemSave: (itemId: string, textEditorValue: string) => void;
+}
+
+interface IListItemEditorProps extends IListItemEditorDataProps, IListItemEditorCallbackProps {
+}
+
+interface ListItemEditorState {
+  textEditorValue: string;
+}
+
+export class ListItemEditor extends React.PureComponent<IListItemEditorProps, ListItemEditorState> {
   static displayName = 'ListItemEditor';
   static propTypes = {
     text: PropTypes.string.isRequired,
@@ -11,35 +31,36 @@ export class ListItemEditor extends React.PureComponent {
     onItemSave: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
+  constructor(props: IListItemEditorProps) {
     super(props);
+
     this.state = {
       textEditorValue: this.props.text,
     };
   }
 
-  onCancel = () => {
+  onCancel = (): void => {
     this.props.onItemCancel(this.props.itemId);
   };
-  onDelete = () => {
+  onDelete = (): void => {
     this.props.onItemDelete(this.props.itemId);
   };
-  onSave = () => {
+  onSave = (): void => {
     this.props.onItemSave(this.props.itemId, this.state.textEditorValue);
   };
-  onChange = (event) => {
+  onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const targetValue = event.target.value;
-    this.setState({ textEditorValue: targetValue });
+    this.setState(() => ({textEditorValue: targetValue}));
   };
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <input value={this.state.textEditorValue} onChange={this.onChange} type="text" />
         <button onClick={this.onSave} className="btn btn-primary">Save</button>
         <button onClick={this.onCancel} className="btn btn-light">Cancel</button>
         <button onClick={this.onDelete} className="btn btn-danger">Delete</button>
-      </div>
+      </React.Fragment>
     );
   }
 }

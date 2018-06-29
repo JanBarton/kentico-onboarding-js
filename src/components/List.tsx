@@ -1,15 +1,28 @@
-import React, { PureComponent } from 'react';
+import * as React from 'react';
 import { ListItem } from './ListItem';
 import { ListItemEditor } from './ListItemEditor';
 import { ListItemOrder } from './ListItemOrder';
 import { generateId } from '../utils/IDgen';
-import Immutable from 'immutable';
+import * as Immutable from 'immutable';
 
-export class List extends PureComponent {
+interface IItem {
+  isBeingEdited: boolean;
+  text: string;
+  id: string;
+}
+
+interface IListState {
+  newItemText: string;
+  items: Immutable.List<IItem>;
+  orderDirection: string;
+}
+
+export class List extends React.PureComponent<{}, IListState> {
   static displayName = 'List';
 
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
+
     this.state = {
       newItemText: '',
       items: Immutable.List(),
@@ -17,46 +30,40 @@ export class List extends PureComponent {
     };
   }
 
-  onItemClick = (itemId) => {
+  onItemClick = (itemId: string): void => {
     const oldItems = this.state.items;
-    const indexOfClickedItem = oldItems.findIndex((item) => item.id === itemId);
+    const indexOfClickedItem = oldItems.findIndex((item: IItem) => item.id === itemId);
     const newItems = oldItems.update(indexOfClickedItem, (oldItem) => {
       return {
         ...oldItem,
         isBeingEdited: true,
       };
     });
-    this.setState({
-      items: newItems,
-    });
+    this.setState(() => ({items: newItems}));
   };
 
-  onItemCancel = (itemId) => {
+  onItemCancel = (itemId: string): void => {
     const oldItems = this.state.items;
-    const indexOfClickedItem = oldItems.findIndex((item) => item.id === itemId);
+    const indexOfClickedItem = oldItems.findIndex((item: IItem) => item.id === itemId);
     const newItems = oldItems.update(indexOfClickedItem, (oldItem) => {
       return {
         ...oldItem,
         isBeingEdited: false,
       };
     });
-    this.setState({
-      items: newItems,
-    });
+    this.setState(() => ({items: newItems}));
   };
 
-  onItemDelete = (itemId) => {
+  onItemDelete = (itemId: string): void => {
     const oldItems = this.state.items;
-    const indexOfDeletedItem = oldItems.findIndex((item) => item.id === itemId);
+    const indexOfDeletedItem = oldItems.findIndex((item: IItem) => item.id === itemId);
     const newItems = oldItems.delete(indexOfDeletedItem);
-    this.setState({
-      items: newItems,
-    });
+    this.setState(() => ({items: newItems}));
   };
 
-  onItemSave = (itemId, text) => {
+  onItemSave = (itemId: string, text: string): void => {
     const oldItems = this.state.items;
-    const indexOfSavedItem = oldItems.findIndex((item) => item.id === itemId);
+    const indexOfSavedItem = oldItems.findIndex((item: IItem) => item.id === itemId);
     const newItem = {
       text,
       isBeingEdited: false,
@@ -65,48 +72,34 @@ export class List extends PureComponent {
     const newItems = oldItems.update(indexOfSavedItem, () => {
       return newItem;
     });
-    this.setState({
-      items: newItems,
-    });
+    this.setState(() => ({items: newItems}));
   };
 
-  getSortedItems = () => {
-    if (this.state.orderDirection === 'asc') {
-      return this.state.items.sort(
-        (a, b) => (a.text).localeCompare((b.text))
-      );
-    }
-
-    return this.state.items.sort(
-      (a, b) => (b.text).localeCompare((a.text))
-    );
+  getSortedItems = (): Immutable.List<IItem> => {
+    const sortedAsc = this.state.items.sort((a, b) => (a.text).localeCompare((b.text))).toList();
+    return this.state.orderDirection === 'asc' ? sortedAsc : sortedAsc.reverse().toList();
   };
 
-  onToggleSortBy = () => {
+  onToggleSortBy = (): void => {
     const newDirection = this.state.orderDirection === 'asc' ? 'desc' : 'asc';
-    this.setState({
-      orderDirection: newDirection,
-    });
+    this.setState(() => ({orderDirection: newDirection}));
   };
 
-  onChangeHandler = (event) => {
+  onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newValue = event.target.value;
     this.setState({
       newItemText: newValue,
     });
   };
 
-  onClickHandler = () => {
+  onClickHandler = (): void => {
     const newItem = {
       text: this.state.newItemText,
       isBeingEdited: false,
       id: generateId(),
     };
     const newList = this.state.items.push(newItem);
-    this.setState({
-      items: newList,
-      newItemText: '',
-    });
+    this.setState(() => ({items: newList, newItemText: ''}));
   };
 
   render() {
@@ -115,7 +108,7 @@ export class List extends PureComponent {
         <div className="col-sm-12 col-md-8">
           <ListItemOrder orderDirection={this.state.orderDirection} onSortByToggle={this.onToggleSortBy} />
           <ul className="list-group">
-            {this.getSortedItems().map((item, index) => {
+            {this.getSortedItems().map((item: IItem, index: number) => {
               if (item.isBeingEdited) {
                 return (
                   <ListItemEditor
