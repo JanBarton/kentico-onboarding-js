@@ -4,6 +4,7 @@ import { ListItemEditor } from './ListItemEditor';
 import { ListItemOrder } from './ListItemOrder';
 import { generateId } from '../utils/IDgen';
 import * as Immutable from 'immutable';
+import { OrderBy } from '../reducers/IStore';
 
 interface IItem {
   isBeingEdited: boolean;
@@ -14,19 +15,27 @@ interface IItem {
 interface IListState {
   newItemText: string;
   items: Immutable.List<IItem>;
-  orderDirection: string;
 }
 
-export class List extends React.PureComponent<{}, IListState> {
+export interface IListDataProps {
+  orderBy: OrderBy;
+}
+
+export interface IListCallbackProps {
+  onToggleOrderClick: () => void;
+}
+
+type IListProps = IListDataProps & IListCallbackProps;
+
+export class List extends React.PureComponent<IListProps, IListState> {
   static displayName = 'List';
 
-  constructor(props: {}) {
+  constructor(props: IListProps) {
     super(props);
 
     this.state = {
       newItemText: '',
       items: Immutable.List(),
-      orderDirection: 'asc',
     };
   }
 
@@ -61,6 +70,10 @@ export class List extends React.PureComponent<{}, IListState> {
     this.setState(() => ({items: newItems}));
   };
 
+  onToggleSortBy = (): void => {
+    this.props.onToggleOrderClick();
+  };
+
   onItemSave = (itemId: string, text: string): void => {
     const oldItems = this.state.items;
     const indexOfSavedItem = oldItems.findIndex((item: IItem) => item.id === itemId);
@@ -77,13 +90,9 @@ export class List extends React.PureComponent<{}, IListState> {
 
   getSortedItems = (): Immutable.List<IItem> => {
     const sortedAsc = this.state.items.sort((a, b) => (a.text).localeCompare((b.text))).toList();
-    return this.state.orderDirection === 'asc' ? sortedAsc : sortedAsc.reverse().toList();
+    return this.props.orderBy === 'asc' ? sortedAsc : sortedAsc.reverse().toList();
   };
 
-  onToggleSortBy = (): void => {
-    const newDirection = this.state.orderDirection === 'asc' ? 'desc' : 'asc';
-    this.setState(() => ({orderDirection: newDirection}));
-  };
 
   onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const newValue = event.target.value;
@@ -106,7 +115,7 @@ export class List extends React.PureComponent<{}, IListState> {
     return (
       <div className="row">
         <div className="col-sm-12 col-md-8">
-          <ListItemOrder orderDirection={this.state.orderDirection} onSortByToggle={this.onToggleSortBy} />
+          <ListItemOrder orderDirection={this.props.orderBy} onSortByToggle={this.onToggleSortBy} />
           <ul className="list-group">
             {this.getSortedItems().map((item: IItem, index: number) => {
               if (item.isBeingEdited) {

@@ -2,14 +2,15 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 
 interface IListItemDataProps {
-  text: string;
-  index: number;
-  itemId: string;
+  readonly text: string;
+  readonly index: number;
+  readonly itemId: string;
 }
 
 interface IListItemCallbackProps {
-  onItemClick: (itemId: string) => void;
+  readonly onItemClick: (itemId: string) => void;
 }
+
 interface IListItemProps extends IListItemDataProps, IListItemCallbackProps {
 }
 

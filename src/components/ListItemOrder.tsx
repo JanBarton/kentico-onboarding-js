@@ -2,11 +2,11 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 
 interface IListItemOrderDataProps {
-  orderDirection: string;
+  readonly orderDirection: string;
 }
 
 interface IListItemOrderCallbackProps {
-  onSortByToggle: () => void;
+  readonly onSortByToggle: () => void;
 }
 
 interface IListItemOrderProps extends IListItemOrderDataProps, IListItemOrderCallbackProps {
