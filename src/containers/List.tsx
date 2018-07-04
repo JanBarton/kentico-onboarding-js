@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IListCallbackProps, IListDataProps, List as ListComponent } from '../components/List';
 import { IStore } from '../reducers/IStore';
 import { Dispatch } from 'redux';
+import { IListCallbackProps, IListDataProps, List as ListComponent } from '../components/List';
 import { toggleItemsDirection } from '../actions/actions';
 
 function mapStateToProps(state: IStore): IListDataProps {

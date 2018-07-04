@@ -1,3 +1,4 @@
+import { IItem} from '../reducers/IStore';
 import * as Immutable from 'immutable';
 
 export interface IStore {
@@ -6,11 +7,10 @@ export interface IStore {
   readonly listItems: Immutable.List<IItem>;
 }
 
-interface IItem {
+export type OrderBy = 'asc' | 'dsc';
+
+export interface IItem {
   isBeingEdited: boolean;
   text: string;
   id: string;
 }
-
-
-export type OrderBy = 'asc' | 'dsc';

@@ -1,13 +1,12 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import { IItem } from '../reducers/IStore';
 
-interface IListItemEditorDataProps {
-  readonly text: string;
-  readonly index: number;
-  readonly itemId: string;
+export interface IListItemEditorDataProps {
+  readonly item: IItem;
 }
 
-interface IListItemEditorCallbackProps {
+export interface IListItemEditorCallbackProps {
   readonly onItemCancel: (itemId: string) => void;
   readonly onItemDelete: (itemId: string) => void;
   readonly onItemSave: (itemId: string, textEditorValue: string) => void;
@@ -23,9 +22,7 @@ interface ListItemEditorState {
 export class ListItemEditor extends React.PureComponent<IListItemEditorProps, ListItemEditorState> {
   static displayName = 'ListItemEditor';
   static propTypes = {
-    text: PropTypes.string.isRequired,
-    index: PropTypes.number.isRequired,
-    itemId: PropTypes.string.isRequired,
+    item: PropTypes.object.isRequired,
     onItemCancel: PropTypes.func.isRequired,
     onItemDelete: PropTypes.func.isRequired,
     onItemSave: PropTypes.func.isRequired,
@@ -35,18 +32,18 @@ export class ListItemEditor extends React.PureComponent<IListItemEditorProps, Li
     super(props);
 
     this.state = {
-      textEditorValue: this.props.text,
+      textEditorValue: this.props.item.text,
     };
   }
 
   onCancel = (): void => {
-    this.props.onItemCancel(this.props.itemId);
+    this.props.onItemCancel(this.props.item.id);
   };
   onDelete = (): void => {
-    this.props.onItemDelete(this.props.itemId);
+    this.props.onItemDelete(this.props.item.id);
   };
   onSave = (): void => {
-    this.props.onItemSave(this.props.itemId, this.state.textEditorValue);
+    this.props.onItemSave(this.props.item.id, this.state.textEditorValue);
   };
   onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const targetValue = event.target.value;

@@ -1,20 +1,15 @@
 import * as React from 'react';
 import { ListItem } from './ListItem';
-import { ListItemEditor } from './ListItemEditor';
+import { ListItemEditor } from '../containers/ListItemEditor';
 import { ListItemOrder } from './ListItemOrder';
 import { generateId } from '../utils/IDgen';
 import * as Immutable from 'immutable';
 import { OrderBy } from '../reducers/IStore';
+import { IItem } from '../reducers/IStore';
 
-interface IItem {
-  isBeingEdited: boolean;
-  text: string;
-  id: string;
-}
-
-interface IListState {
+export interface IListState {
   newItemText: string;
-  items: Immutable.List<IItem>;
+  items: Immutable.List<IItem>; // Toto pak smaz
 }
 
 export interface IListDataProps {
@@ -70,10 +65,6 @@ export class List extends React.PureComponent<IListProps, IListState> {
     this.setState(() => ({items: newItems}));
   };
 
-  onToggleSortBy = (): void => {
-    this.props.onToggleOrderClick();
-  };
-
   onItemSave = (itemId: string, text: string): void => {
     const oldItems = this.state.items;
     const indexOfSavedItem = oldItems.findIndex((item: IItem) => item.id === itemId);
@@ -91,6 +82,10 @@ export class List extends React.PureComponent<IListProps, IListState> {
   getSortedItems = (): Immutable.List<IItem> => {
     const sortedAsc = this.state.items.sort((a, b) => (a.text).localeCompare((b.text))).toList();
     return this.props.orderBy === 'asc' ? sortedAsc : sortedAsc.reverse().toList();
+  };
+
+  onToggleSortBy = (): void => {
+    this.props.onToggleOrderClick();
   };
 
 
@@ -122,12 +117,7 @@ export class List extends React.PureComponent<IListProps, IListState> {
                 return (
                   <ListItemEditor
                     key={item.id}
-                    text={item.text}
-                    itemId={item.id}
-                    index={index}
-                    onItemCancel={this.onItemCancel}
-                    onItemDelete={this.onItemDelete}
-                    onItemSave={this.onItemSave}
+                    item={item}
                   />
                 );
               }
