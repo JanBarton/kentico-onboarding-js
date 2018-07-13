@@ -4,3 +4,7 @@ export const ToggleDirection = 'ToggleDirection';
 export const ItemDelete = 'ItemDelete';
 export const ItemSave = 'ItemSave';
 export const ItemCancel = 'ItemCancel';
+export const ItemClick = 'ItemClick';
+export const AddNewItem = 'AddNewItem';
+export const UpItem = 'UpItem';
+export const DownItem = 'DownItem';

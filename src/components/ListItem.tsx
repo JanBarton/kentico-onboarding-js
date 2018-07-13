@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 
-interface IListItemDataProps {
+export interface IListItemDataProps {
   readonly text: string;
   readonly index: number;
   readonly itemId: string;
 }
 
-interface IListItemCallbackProps {
+export interface IListItemCallbackProps {
   readonly onItemClick: (itemId: string) => void;
 }
 
@@ -25,7 +25,6 @@ export class ListItem extends React.PureComponent<IListItemProps> {
   onClick = (): void => {
     this.props.onItemClick(this.props.itemId);
   };
-
   render() {
     return (
       <li onClick={this.onClick} id={this.props.itemId} className="list-group-item">{`${this.props.index + 1}. ${this.props.text}`}</li>

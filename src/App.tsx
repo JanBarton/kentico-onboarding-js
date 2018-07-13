@@ -10,7 +10,6 @@ export class App extends React.PureComponent {
           <div className="header clearfix">
             <h3 className="text-muted">Kentico Academy</h3>
           </div>
-
           <div className="jumbotron">
             <h1>JS onboarding</h1>
             <p className="lead">

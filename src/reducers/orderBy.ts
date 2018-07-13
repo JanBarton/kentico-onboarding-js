@@ -1,11 +1,12 @@
 import { AnyAction } from 'redux';
 import { ToggleDirection } from '../constants/actionTypes';
+import { OrderBy } from './IStore';
 
-export function orderBy(state: 'asc' | 'dsc' = 'asc' , action: AnyAction): 'asc' | 'dsc' {
-   switch (action.type) {
+export function orderBy(state: OrderBy = OrderBy.Ascending, action: AnyAction): OrderBy {
+  switch (action.type) {
     case ToggleDirection:
-       return state === 'dsc' ? 'asc' : 'dsc';
+      return state === OrderBy.Descending ? OrderBy.Ascending : OrderBy.Descending;
     default:
       return state;
-    }
+  }
 }

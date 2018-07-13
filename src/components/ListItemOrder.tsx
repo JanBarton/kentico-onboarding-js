@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import { OrderBy } from '../reducers/IStore';
 
 interface IListItemOrderDataProps {
-  readonly orderDirection: string;
+  readonly orderDirection: OrderBy;
 }
 
 interface IListItemOrderCallbackProps {
@@ -26,7 +27,7 @@ export class ListItemOrder extends React.PureComponent<IListItemOrderProps> {
   render() {
     return (
       <button className="btn" onClick={this.onSortByToggle}>
-        Seradit podle abecedy: {this.props.orderDirection === 'asc' ? 'Sestupne' : 'Vzestupne'}
+        Seradit podle abecedy: {this.props.orderDirection === OrderBy.Ascending ? 'Sestupne' : 'Vzestupne'}
       </button>
     );
   }

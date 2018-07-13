@@ -9,3 +9,7 @@ body {
   display: flex;
 
 }
+
+.todo-list{
+  margin-bottom: 50px;
+}

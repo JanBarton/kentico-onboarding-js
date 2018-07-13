@@ -16,7 +16,7 @@ interface IListItemEditorProps extends IListItemEditorDataProps, IListItemEditor
 }
 
 interface ListItemEditorState {
-  textEditorValue: string;
+  readonly textEditorValue: string;
 }
 
 export class ListItemEditor extends React.PureComponent<IListItemEditorProps, ListItemEditorState> {

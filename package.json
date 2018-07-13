@@ -54,15 +54,19 @@
     "whatwg-fetch": "^1.0.0"
   },
   "dependencies": {
+    "@types/memoizee": "^0.4.2",
     "@types/prop-types": "^15.5.3",
     "@types/react-redux": "^6.0.3",
+    "@types/uuid": "^3.4.3",
     "bootstrap": "^3.3.7",
     "immutable": "^3.8.2",
+    "memoizee": "^0.4.12",
     "react": "16.4.1",
     "react-dom": "16.4.1",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
-    "ts-jest": "^19.0.14"
+    "ts-jest": "^19.0.14",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "node scripts/start.js",
