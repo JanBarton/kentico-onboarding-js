@@ -1,6 +1,7 @@
 import './sticky-footer.css';
 import * as React from 'react';
 import { List } from './containers/List';
+import { ArrowList} from './containers/ArrowList';
 
 export class App extends React.PureComponent {
   render() {
@@ -25,6 +26,7 @@ export class App extends React.PureComponent {
 
           <section id="app-content">
             <List />
+            <ArrowList />
           </section>
         </div>
         <footer className="footer">

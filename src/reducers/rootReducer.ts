@@ -2,7 +2,7 @@ import { AnyAction } from 'redux';
 import { counter } from './counter';
 import { orderBy } from './orderBy';
 import { items } from './Items';
-import { arrowItems} from './ArrowItems';
+import { arrowItems} from './arrowItems';
 import { IStore } from './IStore';
 
 export function rootReducer(state: IStore = {} as IStore, action: AnyAction): IStore {

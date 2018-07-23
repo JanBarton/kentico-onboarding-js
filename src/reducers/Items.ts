@@ -3,8 +3,9 @@ import * as Immutable from 'immutable';
 import { ItemDelete, ItemCancel, ItemSave, ItemClick, AddNewItem } from '../constants/actionTypes';
 import { IItem } from '../reducers/IStore';
 
+const initialState: Immutable.List<IItem> = Immutable.List();
 
-export function items(state: Immutable.List<IItem>, action: AnyAction): Immutable.List<IItem> {
+export function items(state: Immutable.List<IItem> = initialState, action: AnyAction): Immutable.List<IItem> {
   switch (action.type) {
     case ItemDelete: {
       const indexOfItemToDelete = state.findIndex((item: IItem) => item.id === action.payload.itemId);

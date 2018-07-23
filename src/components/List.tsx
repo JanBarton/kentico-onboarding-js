@@ -50,7 +50,7 @@ export class List extends React.PureComponent<IListProps, IListState> {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <div className="row todo-list">
           <div className="col-sm-12 col-md-8">
             <ListItemOrder orderDirection={this.props.orderBy} onSortByToggle={this.onToggleSortBy} />
@@ -73,7 +73,7 @@ export class List extends React.PureComponent<IListProps, IListState> {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-
+import { IItem } from '../reducers/IStore';
 export interface IArrowListItemDataProps {
-  readonly id: string;
-  readonly arrowItem: string;
+  readonly arrowItem: IItem;
 }
 
 export interface IArrowListItemCallbackProps {
@@ -16,19 +15,16 @@ interface IArrowListItemProps extends IArrowListItemCallbackProps, IArrowListIte
 export class ArrowListItem extends React.PureComponent<IArrowListItemProps> {
   static displayName: 'ArrowListItem';
   static propTypes = {
-    id: PropTypes.string.isRequired,
-    arrowItem: PropTypes.string.isRequired
+    arrowItem: PropTypes.object.isRequired
   };
 
   render() {
     return (
-      <React.Fragment>
-        <li id={this.props.id} className="arrow-item">
-          {this.props.arrowItem}
-          <button>Up</button>
-          <button>Down</button>
-        </li>
-      </React.Fragment>
+      <li className="arrow-item list-group-item">
+        {this.props.arrowItem.text}
+        <button className="button-up">Up</button>
+        <button className="button-down">Down</button>
+      </li>
     );
   };
 }

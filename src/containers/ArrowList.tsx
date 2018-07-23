@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 
 
 function mapStateToProps(state: IStore): IArrowListDataProps {
- return {
-   arrowItems: state.arrowListItems,
- };
+  // const orderedItems = state.arrowListItemsOrder.map((itemId: Uuid) => state.arrowListItems.get(itemId));
+  return {
+    arrowItems: state.arrowListItems,
+  };
 }
 
 // function mapDispatchToProps(dispatch: Dispatch): IArrowListCallbackProps {
@@ -16,5 +17,5 @@ function mapStateToProps(state: IStore): IArrowListDataProps {
 //  }
 // }
 
-export const List: React.ComponentClass = connect(mapStateToProps, undefined)(ArrowListComponent);
+export const ArrowList: React.ComponentClass = connect(mapStateToProps)(ArrowListComponent);
 

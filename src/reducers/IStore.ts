@@ -10,14 +10,15 @@ export interface IStore {
 
 export type Uuid = string;
 
+
 export enum OrderBy {
   Ascending = 'asc',
   Descending = 'dsc',
 }
 
 export interface IItem {
-  isBeingEdited: boolean;
-  text: string;
-  id: string;
+ readonly isBeingEdited: boolean;
+ readonly text: string;
+ readonly id: string;
 }
 
